@@ -1,0 +1,80 @@
+slide mit
+
+istruzione da sinistra a destra (mov 1, a ;store 1 in a) a differenza di mips
+esempio load and store
+consistenza sequenziale
+
+///////////////////////////////
+i processori moderni utilizzano la consistenza rilassata: le istruzioni vengono riordinate dall'HW (anche dai compilatori con i linguaggi ad alto livello, non con assembly)
+le istruzioni vengono riordinate per ottenere performance migliori e per sfruttare al meglio il parallelismo a livello di istruzioni.
+è sicuro riordinare? se a != b e se non c'è concorrenza (vedi slide per a e b) 
+
+il processore fa tutto ciò che può per evitare stalli a patto che i risultati siano corretti, rispettando le regole della casa.
+
+memory fence: si forza un ordinamento tra le istruzioni prima e dopo la barriera(fence)
+impedisce il riordino
+la consistenza in questo caso è nemica della velocità.
+questo per l'hardware, ma bisogna assicurarsi che neanche il compilatore faccia il riordino->si dichiara la variabile come volatile
+/*********************////////////*************//////////////***********////////////
+
+nascono(1968) per risolvere i problemi dei protocolli di busy waiting(loop che monitora qualcosa rubando cicli di memoria a qualcun altro rubando cpu) che sono complicati e non c'è distinzione tra le variabili usate per la sincronizzazione e quelle usate per calcoli.
+il busywaiting ha senso se le attese sono brevi, da evitare se la sezione critica è notevole, soprattutto nei sistemi monoprocessori.
+implementabili in molti modi es busywaiting, kernel
+
+un semaforo è un tipo speciale di variabile condivisa, manipolata da solo due operazioni atomiche, P(wait) e V(signal).
+è un interno non negativo
+V: signal, segnala l'occorrenza di un evento, incrementando il valore della variabile
+P: wait, ritarda un processo finché il semaforo non è diverso da zero, positivo. Poi lo decrementa.
+
+slide dichiarazione, manipolazione
+
+supportano direttamente la mutua esclusione e semplici forme di sincronizzazione su condizione
+
+coi semafori si possono implementare sezini critiche, barriere, 
+
+
+barriere: sincronizzo i due processi con una variabile flag che altro non è che un semaforo
+
+produttore/consumatore:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

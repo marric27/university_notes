@@ -1,0 +1,139 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\author{Marco Ricci}
+\title{Appunti corso Sistemi Discreti}
+\begin{document}
+\tableofcontents
+\newpage
+\section{Cyber-physical system}
+Un \textbf{sistema cyber-fisico (CPS)} è l'integrazione di un processo computazionale con processi fisici il cui comportamento è definito da entrambe le parti \textit{cyber} e \textit{physical} del sistema. I computer e le reti embedded monitorano e controllano i processi fisici, di solito tramite loop di controllo (feedback loop) in cui i processi fisici influenzano le computazioni e viceversa.
+\\
+\subsection{Componenti di un CPS}
+\begin{itemize}
+\item Impianto fisico
+\item Piattaforme computazionali (sensori, attuatori, computer, sistemi operativi)
+\item Rete (comunicazione)
+\end{itemize}
+
+\subsection{Embedded systems}
+Un \textbf{sistema embedded} è un sistema computazionale \textit{immerso} in un sistema fisico.
+Ogni sistema cyber-physical contiene un sistema embedded. Nei sistemi embedded l'attenzione è focalizzata sulla parte computazionale.
+
+Il sistema embedded non ha la rete.
+
+\subsection{Real-time systems}
+Un sistema real-time è un sistema che deve rispondere a cambiamenti esterni rispettando determinati vincoli temporali.
+
+Molti, ma non tutti, embedded systems sono anche sistemi real-time. Ad esempio un agente automatico di trading è un sistema real-time ma non embedded. Un CPS può essere o meno un sistema real-time (auto sì, sistema audio no).
+
+\subsection{Esempi CPS}
+\begin{itemize}
+\item Cardiochirurgia, ambito medico come strumenti robotici che permettono di operare anche se il chirurgo non è fisicamente presente.
+\item Traffico veicolare cooperativo: auto con sistemi di assistenza alla guida. Cooperativo per scambio di messaggi tra autovetture, per sicurezza, info traffico, ridurre rischi.
+\item Gestione traffico aereo: soft walls, ovvero zone proibite al volo.
+\end{itemize}
+
+\subsection{Storia del termine cyber}
+L'origine del termine non proviene da \textit{cyberspace}(romanzi di William Gibson), ma dalla parola greca \textit{kybernetes}, ovvero timoniere, pilota, governatore. Venne coniato da Norbert Wiener(anni '30) come \textit{cybernetics}. Per Wiener la cibernetica è la congiunzione tra il controllo e la comunicazione.
+
+\subsection{Sviluppo di prodotti innovativi}
+Per progettare, sviluppare e implementare sistemi complessi come i CPS si adottano processi basati su un approccio che cerca di \textbf{decomporre la complessità} in piccole parti, gestire le parti e collegarle (approccio come in ingegneria del software).
+
+\begin{itemize}
+\item idea
+\item modello, sul quale iniziare a fare ragionamenti
+\item prototipo, sviluppato sulla base del modello, per dimostrare l'efficacia dell'idea
+\item prodotto
+\end{itemize}
+
+I punti precedenti fanno parte di un processo iterativo in cui ogni fase è di un ordine di grandezza più complessa (costosa) della precedente.
+Per gestire queste fasi minimizzando le probabilità di errore e ottimizzarle, ci vengono in aiuto strumenti e approcci:
+\begin{itemize}
+\item prototipazione virtuale, possibilità di simulare un esperimento al posto di realizzarlo fisicamente, riducendo costi e rischi se qualcosa va male. (e.g. simulazioni virtuali su auto, aerei, ecc)
+\item testing delle funzionalità dei prototipi
+\item verifica delle funzionalità
+\item progettazione basata su modello, sistemi più o meno complicati da comprendere dove per gestire la complessità si fa riferimento a un modello.
+\end{itemize}
+
+\subsection{Processo iterativo di sviluppo}
+\begin{itemize}
+\item Modellazione (modeling), fase che descrive cosa fa il sistema o cosa dovrebbe fare.
+\item Progettazione (design), fase che specifica come realizzare le funzionalità del sistema.
+\item Analisi (analisys), fase che spiega perché un sistema fa ciò che fa ( o non fa ciò che dovrebbe fare).
+\end{itemize}
+\paragraph{Differenza tra sistema fisico e modello} Si utilizza la modellazione perché consente di risolvere in anticipo delle problematiche, ma il modello non è il sistema fisico, anche se esso è il più dettagliato possibile.
+La scelta del modello, che sia più o meno dettagliato, dipende dal contesto in cui ci si muove. Per esempio per descrivere l'orbita degli elettroni si andrà ad utilizzare un modello tempo-discreto per questioni chimico-fisiche, perché il fenomeno ce lo richiede, ovvero la natura dell'elettrone.
+Il modello utilizzato è determinato dal tipo di fenomeno/comportamento che si andrà ad analizzare, anche se l'oggetto è lo stesso.
+
+\subsection{Buzzwords}
+Una parola d'ordine è una parola o una frase, nuova o già esistente, che diventa popolare per un periodo di tempo. Le parole d'ordine spesso derivano da termini tecnici, ma spesso hanno rimosso gran parte del significato tecnico originale attraverso l'uso alla moda, semplicemente usato per impressionare gli altri.
+
+\begin{itemize}
+\item hybrid systems
+\item embedded systems
+\item CPS
+\item Systems of systems
+\item internet of things IoT\\
+\end{itemize}
+Per chiarire:
+\paragraph{IoT} Termine utilizzato per descrivere un oggetto fisico accessibile tramite internet.
+\paragraph{Embedded System} Termine utilizzato per descrivere una parte computazionale immersa nel mondo fisico
+\paragraph{CPS} Termine utilizzato per descrivere una parte computazionale immersa nel mondo fisico collegate ad altre componenti tramite rete, non necessariamente internet.\\
+\\
+\textit{Think critically}: questi termini valgono ad oggi, ma la tecnologia cambia sempre, quindi non saranno validi o completamente validi fra qualche tempo.
+
+
+CPS e controllo
+La visione di IoT e CPS si estende al controllo a ciclo chiuso dei sistemi fisici.
+Il controllo a ciclo chiuso non è esclusivamente una problematica ICT(controlli automatici: la comprensione della dinamica e del controllo sono fondamentali.
+Un sistema stabile può diventare instabile con il controllo a ciclo chiuso e il controllo a ciclo chiuso può consentire ad un sistema instabile di comportarsi in maniera stabile.
+
+
+Sfide della ricerca su CPS e controllo
+Controllo su reti non deterministiche
+Latenza(ritardo tra la misura e l'attuazione) e jitter(varianza del periodo di campionamento)
+Larghezza di banda che influisce sullo scambio di informazioni, dati e misure
+sicurezza e resilienza
+sensori modelli e algoritmi plug-n-play
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

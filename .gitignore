@@ -274,3 +274,10 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+# mine
+*.mkv
+*.pdf
+*.djvu
+*.desktop
+*.aac
