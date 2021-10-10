@@ -796,6 +796,36 @@ symmetric n-process barrier is constructed from pairs of simple, two-process bar
 
 \section{Semafori}
 \marginpar{videolezione 2021-10-08}
+Nascono(1968) per risolvere i problemi dei protocolli basati sul busy waiting(loop che monitora qualcosa rubando cicli di memoria a qualcun altro rubando cpu) che sono complicati e inefficienti, e non c'è distinzione tra le variabili usate per la sincronizzazione e quelle normali usate per calcoli.
+Il busywaiting va evitato il più possibile, ha senso se le attese sono brevi, da evitare se la sezione critica è notevolmente grande(molte istruzioni), soprattutto nei sistemi monoprocessori.
+I semafori sono implementabili in molti modi e.g. busywaiting, kernel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
