@@ -797,8 +797,15 @@ symmetric n-process barrier is constructed from pairs of simple, two-process bar
 \section{Semafori}
 \marginpar{videolezione 2021-10-08}
 Nascono(1968) per risolvere i problemi dei protocolli basati sul busy waiting(loop che monitora qualcosa rubando cicli di memoria a qualcun altro rubando cpu) che sono complicati e inefficienti, e non c'è distinzione tra le variabili usate per la sincronizzazione e quelle normali usate per calcoli.
-Il busywaiting va evitato il più possibile, ha senso se le attese sono brevi, da evitare se la sezione critica è notevolmente grande(molte istruzioni), soprattutto nei sistemi monoprocessori.
 I semafori sono implementabili in molti modi e.g. busywaiting, kernel.
+Il busywaiting va evitato il più possibile, ha senso se le attese sono brevi, da evitare se la sezione critica è notevolmente grande(molte istruzioni), soprattutto nei sistemi monoprocessori.
+L'alternativa è sospendere, con l'intervento de SO, il processo che non può andare avanti e risvegliarlo nel momento in cui si verificano le condizioni per proseguire. Ciò evita l'impegno di memoria e cpu, ma costa dal punto di vista delle syscall.
+
+Un \textbf{semaforo} è un tipo speciale di variabile condivisa(shared), manipolata da solo due operazioni \textbf{atomiche}, \textit{P(wait)} e \textit{V(signal)}.
+\`{E} un intero non negativo.
+V: signal, segnala l'occorrenza di un evento, incrementando il valore della variabile semaforica.
+P: wait, ritarda un processo finché non si verifica un evento, in pratica finché il semaforo non è diverso da zero, positivo. Poi lo decrementa.\\ \\
+\includegraphics[scale=0.7]{img/sem.png} \\
 
 
 
