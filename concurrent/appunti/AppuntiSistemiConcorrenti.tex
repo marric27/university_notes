@@ -807,30 +807,80 @@ V: signal, segnala l'occorrenza di un evento, incrementando il valore della vari
 P: wait, ritarda un processo finché non si verifica un evento, in pratica finché il semaforo non è diverso da zero, positivo. Poi lo decrementa.\\ \\
 \includegraphics[scale=0.7]{img/sem.png} \\
 
+Un semaforo binario è un semaforo il cui valore è sempre 0 o 1. In particolare, un'operazione V su un semaforo binario viene eseguita solo quando il semaforo ha valore 0. (Si potrebbe definire l'operazione v su un semaforo binario come un'operazione che aspetta finché il valore del semaforo è inferiore a 1, quindi esegue l'incremento).
+
+I semafori supportano direttamente la mutua esclusione e semplici forme di sincronizzazione su condizione.
+Viene qui illustrato il loro utilizzo come soluzione ai problemi di sezione critica, barriere, produttore/consumatore, buffer limitato.
+
+\subsection{Sezione critica: mutua esclusione}
+Una precedente soluzione al problema della sezione critica era stato risolto con l'utilizzo della variabile \textit{lock}, la quale veniva settata in base al fatto che un processo si trovasse o meno in sezione critica.
+Questa stessa soluzione può essere implementata con i semafori nativamente, in quanto le operazioni su \textit{lock} sono equivalenti alle \textit{P} e \textit{V}.\\
+\includegraphics[scale=0.7]{img/sem1.png} \\
+
+\subsection{Barriere: segnalazione di eventi}
+Si consideri prima il problema di implementare una barriera a due processi. Sono richieste due proprietà: primo, nessuno dei due processi può superare la barriera finché entrambi non sono arrivati. In secondo luogo, la barriera deve essere riutilizzabile poiché in generale gli stessi processi avranno bisogno di sincronizzarsi dopo ogni fase del calcolo (come in un'iterazione).
+Sono richiesti due semafori per sapere ogni volta che un processo arriva alla barriera o vi parte.
+Per risolvere il problema, questi due semafori vengono utilizzati come \textit{variabili flag}, ovvero settati con V quando un processo arriva alla barriera, e resettati con P quando un processo attende.
+Per n processi si usa un array di semafori oppure un processo coordinatore.
+
+\subsection{Produttore/consumatore: split binary semaphores}
+\paragraph{Contesto} il produttore e il consumatore comunicano tramite un buffer condiviso in cui il primo deposita un'informazione e il secondo la preleva. Si considera lo scenario non con due processi, ma con \textbf{n processi}.
+\paragraph{Problema} fondamentale è sincronizzare l'accesso al buffer: per assicurare che il buffer non venga sovrascritto le operazioni di deposito e di prelievo devono alternarsi e i messaggi devono essere ricevuti solo una volta.
+\paragraph{Soluzione} usare i semafori come flag di segnalazione per indicare la raggiunta di un punto di esecuzione critico(inizio e fine delle operazioni di prelievo e deposito) o per indicare il cambiamento dello stato del buffer.
+\paragraph{Implementazione} Si usano due semafori, \textit{empty} e \textit{full}, che indicano se il buffer è vuoto o pieno. Inizialmente, il buffer è vuoto quindi il valore iniziale di \textit{empty} è 1 (cioè, l'evento "rendere il buffer vuoto" si è già verificato). Il valore iniziale di \textit{full} è 0. Quando un produttore vuole eseguire il deposito, deve prima aspettare che il buffer sia vuoto; dopo che un produttore deposita un oggetto, il buffer diventa pieno. Allo stesso modo, quando un consumatore vuole eseguire un \textit{fetch}, deve prima aspettare che il buffer sia pieno, e poi rende il buffer vuoto. 
+Un processo attende un evento eseguendo P sul semaforo appropriato e segnala un evento eseguendo V.
+
+\textit{empty} e \textit{full} sono entrambi \textbf{semafori binari}. Insieme
+formano quello che viene chiamato un \textbf{semaforo binario splittato}, perché al massimo uno alla volta è 1. Il termine semaforo binario splittato deriva dal fatto che \textit{full} e \textit{empty} possono essere visti come un singolo semaforo binario che è stato diviso in due semafori binari. In generale, un semaforo binario diviso può essere formato da qualsiasi numero di semafori binari.
+I semafori binari splittati sono importanti perché possono essere usati come segue per implementare la mutua esclusione. Supponiamo che uno dei semafori binari abbia un valore iniziale di 1 (quindi gli altri sono inizialmente 0). Supponiamo inoltre che, nei processi che usano i semafori, ogni percorso di esecuzione inizia con un'operazione P su uno dei semafori, e finisce con un'operazione V su uno dei semafori.
+Quindi tutte le dichiarazioni tra qualsiasi P e il successivo V vengono eseguite con mutua esclusione.
+In particolare, ogni volta che un processo si trova tra un P e un V, i semafori sono tutti 0, e quindi nessun altro processo può completare un P finché il primo processo non esegue una V.\\ \\
+\includegraphics[scale=0.7]{img/split.png} \\
+
+\paragraph{Considerazioni} Se i dati vengono prodotti approssimativamente alla stessa velocità con cui vengono consumati, un processo non dovrebbe generalmente aspettare molto tempo per accedere al singolo buffer. Tuttavia, l'esecuzione del produttore e del consumatore è comunemente \textbf{bursty}(a raffica).
+Per esempio, un produttore potrebbe produrre diversi elementi in rapida successione, poi fare altri calcoli prima di produrre un'altra serie di elementi. In questi casi, una capacità del \textbf{buffer più grande} di uno può aumentare significativamente le prestazioni riducendo il numero di volte che i processi si bloccano. (Questo è un esempio del classico compromesso tempo/spazio nell'informatica).
+
+\subsection{Bounded Buffers: Resource Counting}
 
 
 
 
+\subsection{Problema dei filosofi}
+risolto con 5 semafori
 
 
+\subsection{Lettori e scrittori}
+Due tipi di processi, lettori e scrittori, condividono un'area di memoria condivisa. I processi lettori accedono alla memoria condivisa per leggerne il contenuto, mentre i processi scrittori vi accedono sia per leggere che per scrivere.
+Problematiche di concorrenza e interferenza si evitano facendo operare i processi in mutua esclusione, banalmente: il processo scrittore deve accedere alla memoria condivisa in maniera esclusiva, mentre i lettori devono poterla leggere concorrentemente se nessuno scrittore sta accedendo alla memoria.
 
+\subsubsection{Soluzione 1: mutua esclusione}
+Rappresenta una soluzione \textit{overconstrain}, pone troppi vincoli(più vincoli del necessario), in quanto blocca troppo i processi, diminuendo la concorrenza. Infatti questa soluzione tratta il problema come un semplice caso di mutua esclusione. Funzionante, ma non efficiente. \\ \\
+\includegraphics[scale=0.41]{img/over.png} \\
+\bigskip 
+L'implementazione successiva rilascia alcuni vincoli facendo girare i lettori in maniera concorrente.\\ \\
+\includegraphics[scale=0.41]{img/over2.png} \\
+Questa soluzione considera i lettori come un'unica entità, e solo il primo lettore ha bisogno di richiedere la mutua esclusione eseguendo la P(rw); gli altri lettori si aggiungeranno e potranno anch'essi leggere la memoria.
+Quando tutti i lettori hanno terminato la lettura, l'ultimo deve rilasciare il lock con la V(rw).
+Per implementare tutto questo si usa la variabile shared \textit{nr}, numero dei processi lettori attivi. Questa variabile verrà incrementata quando si aggiunge un lettore e decrementata quando termina la lettura.  Gli incrementi e decrementi sulla variabile \textit{nr} vanno effettuati atomicamente(parentesi angolari) che vengono implementate mediante l'utilizzo di un ulteriore semaforo(mutexR).\\ \\
+\includegraphics[scale=0.41]{img/over3.png} \\
+In sintesi questa soluzione considera i lettori come un gruppo. Poi utilizza due semafori, uno per la gestione della variabile nr l'altro per gestire la mutua esclusione tra il gruppo dei lettori e ciascuno scrittore.
+Pur funzionante, tale soluzione è \textit{not fair} perché c'è la possibilità che gli scrittori rimangano bloccati per sempre se ci sono sempre lettori che si aggiungono. Si dice che viene data la preferenza ai lettori.
 
+\subsubsection{Soluzione 2: tecnica del passaggio del testimone}
+Questa soluzione impiega semafori binari splittati per fornire la mutua esclusione e segnalare processi ritardati.
+La tecnica del passaggio del testimone può essere utilizzata per implementare dichiarazioni arbitrarie in attesa e quindi per attuare condizioni arbitrarie sincronizzazione. La tecnica può essere utilizzata anche per controllare con precisione l'ordine in cui si risvegliano i processi sospesi.
 
+La logica di questa soluzione è contare il numero di ogni tipo di processo che cerca di accedere al database, quindi vincolare i valori dei contatori. In pratica, dati \textit{nr} e \textit{nw} interi non negativi che rappresentano il numero di lettori e scrittori che stanno accedendo alla memoria, gli stati cattivi da evitare sono quando sia \textit{nr} che \textit{nw} sono positivi, o quando \textit{nw} è maggiore di 1.  \\
+\includegraphics[scale=0.41]{img/baton.png} \\ \\
+Sotto il negato dello stato cattivo che rappresenta lo stato buono. \\ 
+\includegraphics[scale=0.41]{img/baton2.png} \\
+Il primo termine dice che lettori e scrittori non possono accedere contemporaneamente al database; il secondo dice che c'è al massimo uno scrittore attivo.
 
+Il predicato RW deve essere un invariante globale, vero sempre.\\
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+\includegraphics[scale=0.41]{img/baton2.png} \\
+Condizione di guardia: condizione che deve essere rispettata prima che un processo entri in attività(lettura memoria shared).
+Per il lettore la c.d.g. è $ nw == 0 $, mentre per lo scrittore è \textit{(nr==0 AND nw==0)} (solitudine) .
 
 
 

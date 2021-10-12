@@ -102,10 +102,83 @@ sicurezza e resilienza
 sensori modelli e algoritmi plug-n-play
 
 
+\section{Analisi dei dati, regressione lineare}
+\marginpar{dalla video lezione 2021-09-29}
+\marginpar{matlab video lezione 2021-09-29}
+approccio sui dati:
+la bontà del modello è legata alla bontà dei dati, ovvero se quei i dati sono rappresentativi del comportamento, dell'oggetto, del processo di nostro interesse allora il modello sarà buono. Se invece i dati sono parziali, incompleti, rappresentano pochi scenari di funzionamento del processo, è chiaro che il modello sarà limitato.
+
+Tra i modelli che servono a descrivere processi, comportamenti quelli più semplici sono i \textbf{modelli regressivi}. Essi hanno a che vedere col legame che può esistere tra due grandezze.
+Caso più semplice su slide funzione lineare. esempio persone temperatura stanza\\
+caso più complesso in corrispondenza di due variabili indipendenti si ha una variabile dipendente. es valute economiche slide
+
+l'obiettivo è sempre trovare il legame tra le variabili: ipotesi di modello
+
+\paragraph{Ipotesi di modello\\}
+Avendo a disposizione dei dati, ci si pone la domanda se i tali dati manifestano un legame, di tipo lineare o più complesso come la seconda funzione non lineare, tra le due variabili indipendenti $ u $ e $ w $ e la variabile indipendente $ y $ \\
+$ y = a_{1}u+a_{2}w $\\
+$ y = a_{1}u^{2}+a_{2}uw+a_{3}w^{2} $
+
+Questi due modelli, anche essendo diversi tra loro, lineare e quadratico, possono essere gestiti con lo stesso strumento che è la regressione lineare.
+La seconda equazione è risolvibile nelle incognite $  a_{1}, a_{2}, a_{3}$ perché esse compaiono in maniera lineare e \textit{u} e \textit{w} sono note. Ciò vale anche se u e w o altre variabili non compaiono in modo lineare. (tabellina slide)\\
+Questa peculiarità consente di applicare la stessa tecnica, basata sui minimi quadrati, per individuare i migliori valori possibili da assegnare alle incognite $ a_{1}, a_{2}, a_{3} $ per \textit{fittare} al meglio entrambi i modelli ai dati a disposizione. Questo approccio, cioè utilizzare i dati a disposizione, immaginare che il modello sia lineare nei parametri e trovare i migliori valori dei parametri, si chiama regressione lineare.
+
+\subsection{Modelli lineari}
+Problema: \textbf{stimare la retta ai minimi quadrati} che meglio approssima il legame tra una variabile indipendente \textit{x} una dipendente \textit{y}.\\
+Il modello cercato è del tipo $ y=ax+b $\\
+e deve \textit{fittare} tutti i dati a disposizione.
+
+Per individuare il modello in maniera univoca, di quanti parametri si ha bisogno?
+Due: coefficiente angolare \textit{a} e l'intercetta \textit{b}. Riformulo il problema: trovare i valori di \textit{a} e \textit{b} che consentono di fittare il modello a tutti i dati a disposizione. Per dati a disposizione si intendono tutti i valori di x e y, rappresentati magari in tabelle(tipo funzione).
+Per individuare a e b bastano due equazioni (due righe di tabella), dato che il sistema è di tipo lineare a due incognite. 
+Se a disposizioni ci sono 10 righe, quali tra queste andrebbero prese?
+
+scostamento, sistema di equazioni approssimate, 
+
+Si assume che l'equazione approssimata possa diventare esatta aggiungendo il termine $e_{i}$, errore di equazione, scostamento.\\
+
+$ y_{i}=ax_{i}+b+e_{i} $\\
+Si aggiunge \textit{e} altrimenti il sistema sarebbe approssimato: $ y_{i}~ax_{i}+b $
+
+Con l'aggiunta di \textit{e} bisogna risolvere il sistema anche rispetto ad essa. Non rappresenta una terza incognita, perché il numero di \textit{e} è pari al numero di equazioni.
+Ora il numero di incognite sarà il numero di e + i due parametri a e b. Il sistema non è risolvibile poiché si hanno più incognite che equazioni.\\
+
+riepilogo sistemi di equazioni \marginpar{videolezione 2021-10-04 min ~30}\\
+
+\includegraphics[scale=0.61]{matri.png} 
+incognite: a, b, E.
+
+Questo procedimento, valido per la retta ai minimi quadrati, si può estendere a qualsiasi tipo di modello di regressione lineare. L'importante è che si è in grado di scrivere il valore della variabile dipendente $ y_{i} $ in forma vettoriale, dove si ha il vettore delle incognite teta, il vettore riga dei regressori fi con i, \\
+$ y_{i}=\varphi_{i}^{T} \theta+e_{i} $\\
+questo modo di scrivere i dati è quello più generale possibile per un modello di regressione lineare, poiché le incognite sono in $ \theta $ che compare in forma lineare
+
+con un numero di incognite maggiore del numero di equazioni si ottengono infinite soluzioni. Tra queste infinite soluzioni, praticamente, quale va scelta?
+Qui interviene l'approccio dell'ottimizzazione, ovvero la scelta della soluzione ottima, migliore rispetto ad un determinato criterio. Esempio di criterio la retta ai minimi quadrati, che prende la retta che rende il più piccolo possibile l'errore quadratico medio. In questo caso gli errori sono contenuti nel vettore E
+
+Errore quadratico medio $ \dfrac{1}{N} \sum_{i=1}^N e_{i}^{2} $
+
+Bisogna prendere valori di $ \theta $ tali che l'errore quadratico medio sia piccolo.
+Come si ottengono i valori di e_{i}?
+y_{i} e $ \varphi_{i}^{T} $ sono note quindi: $ e_{i}=y_{i}-\varphi_{i}^{T} \theta $
+$ e_{i}(\theta) $ dipende da $ \theta $
+
+Tutte le componenti dell'errore saranno in funzione di $ \theta $.
+
+il problema di regressione lineare consiste nel risolvere questo problema di ottimizzazione:\\
+\includegraphics[scale=1]{err.png} \\
+in cui 
 
 
 
 
+
+
+
+
+\subsection{Modelli regressivi}
+
+L'analisi della regressione è una tecnica usata per analizzare una serie di dati che consistono in una variabile dipendente e una o più variabili indipendenti. Lo scopo è stimare un'eventuale relazione funzionale esistente tra la variabile dipendente e le variabili indipendenti. La variabile dipendente nell'equazione di regressione è una funzione delle variabili indipendenti più un termine d'errore.
+L'analisi della regressione può essere usata per effettuare previsioni (ad esempio per prevedere dati futuri di una serie temporale), inferenza statistica, per testare ipotesi o per modellare delle relazioni di dipendenza.
 
 
 

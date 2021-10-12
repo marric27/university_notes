@@ -11,7 +11,7 @@
 \begin{document}
 \tableofcontents
 \newpage
-\chapter{we}
+\chapter{L'ingegneria del software e sviluppo agile}
 \section{Software Engineering}
 \paragraph{Definition IEEE} Software Engineering is the application of a systematic, disciplined, quantifiable approach to the development, operation, and maintenance of software; that is, the application of engineering to software.
 
@@ -196,7 +196,7 @@ ultimi 20 minuti lez 2021-09-28 09-04-58 : pratica icescrum, slack(discord)
 user stories -> backlog di progetto -> backlog viene pianificato allocando le user stories su delle spring (scadenze interne mensile o 15 giorni) -> progress stimato dalla complessità della story -> story point -> uso grafici per montorare i progressi di quanto è implementato o resta da implementare
 
 \newpage
-\section{Software configuration management SCM}
+\chapter{Software configuration management SCM}
 \textbf{Scenario}: più persone che lavorano su un sistema software soggetto a cambiamenti e si ha la necessità di supportare più versioni di questo sistema: più sistemi rilasciati, parte di sistema sotto sviluppo...
 C'è bisogno di coordinazione tra gli sviluppatori, gestire l'evoluzione dei sistemi software e controllare i costi e i rischi relativi ai cambiamenti effettuati nel sistema.
 
@@ -215,7 +215,7 @@ La gestione della configurazione del software può essere amministrata in divers
 \item Miscela di tutti i precedenti
 \end{itemize}
 
-\subsection{SCM activities}
+\section{SCM activities}
 \begin{itemize}
 \item Configuration item identification: capire quali sono gli artefatti da mettere sotto controllo e configurazione.
 \item Promotion management: quali sono condizioni e requisiti per rilasciare codice agli altri sviluppatori.
@@ -611,7 +611,7 @@ Delta-based versioning system developed by Walter Tichy in the early 80’s
 • Branches are basically handled as copies of the main trunk under different URLs\\
 • Completely centralized\\
 
-\paragraph{GIT}
+\subsection{GIT}
 \begin{LARGE}
 Big tutorial su git nella videolezione 2021-10-08 (min 38)
 \end{LARGE}
@@ -635,10 +635,123 @@ the \textbf{HEAD} reference points to the currently tracked commit (like a HEAD 
 
 bare repository, repo in cui posso fare solo push e pull ma non lavorarci dentro
 
-\paragraph{Remote}
-In git si lavora nel proprio repository locale. Tuttavia, per collaborare con gli altri, sincronizzi il tuo repository con un repository remote
-- Puoi avere accesso in sola lettura o in lettura-scrittura ai repository remoti
+\subsubsection{Remote}
+In git si lavora nel proprio repository locale. Tuttavia, per collaborare con gli altri, il repository locale viene sincronizzato con un repository remote
+- si può avere accesso in sola lettura o in lettura-scrittura ai repository remoti
 - Nota remote potrebbe anche essere sulla tua macchina locale
+
+\subsubsection{Git tags}
+Utility per dare un nome simbolico a un commit. e.g. associarlo a una release.
+\begin{verbatim}
+#adding a tag to the current commit, with a descriptive message 
+git tag -a v1.5 -m "this describes the release"
+
+#adding a lightweight tag, with no message 
+git tag v2.0 
+
+#listing your tags 
+git tag
+\end{verbatim}
+
+Una volta utilizzato il tag sul commit, si possono usare i vari comandi sul commit specificando il tag e non l'SHA.
+Quando viene fatto il \textbf{push}, per applicare il tag, bisogna utilizzare l'opzione --tags.
+
+\marginpar{videolezione 2021-10-04}
+\subsubsection{Branch}
+Si ha un branch quando ci sono dei commit che divergono.\\ \\
+\includegraphics[scale=0.3]{branch2.png} \\ \\
+
+Si crea con: \begin{verbatim}         git branch <nome branch> \end{verbatim}
+Sposta l'HEAD sul branch specificato: \begin{verbatim}         git checkout testing\end{verbatim}
+Sposta l'HEAD sul branch specificato e lo crea se non esiste:\begin{verbatim}         git checkout -b testing\end{verbatim}
+
+
+\subsubsection{Merge}
+Il merge è l'operazione di unione di due branch, "collassare i cambiamenti di un branch su un altro".
+Prima di effettuare un merge, git fa un precheck per determinare se e come il merge può essere effettuato.
+
+git log --all --oneline --merges dà una lista di tutti i commit che hanno fatto un merge.
+
+Esistono due tipi di merge:
+\paragraph{3-way merge}
+Si verifica in caso di attività parallele, in cui il merge creerà un commit addizionale che effettua il merge dei due branch.
+\paragraph{Fast-forward merge}
+può essere effettuato quando viene fatto un branch che non devia mai dal branch master.\\ \\
+\includegraphics[scale=0.4]{mergeff.png} \\ \\
+
+\subsubsection{Rebase}
+
+
+\subsubsection{Branch implicito}
+Si crea quando ci sono utenti che lavorano  in parallelo su repository locali diverse.
+
+\subsubsection{Stashing and cleaning}
+Supponiamo che sia a metà strada con il lavoro, ma si ha il bisogno di passare a qualcos'altro, per esempio un branch diverso.
+Facendo stash si mettono da parte le modifiche che poi, si potranno riapplicare di nuovo anche in un branch diverso.
+
+\subsubsection{Git reset}%vs checkout
+
+
+\subsubsection{Pull request}
+Informa altri del codice di un branch che è stato pushato in una repository, in modo tale da effettuare code review e eventualmente accettare e fare il merge del branch.
+
+Pull Request Workflow\\
+1. Developer creates a feature in a branch (locally)\\
+2. The branch is pushed in the central repository\\
+3. The developer fills and submits a pull request\\
+4. The team reviews the code, discusses and modifies it\\
+5. The project maintainer performs the merge and closes the pull request\\
+
+Contributing to somebody else's project through a pull request
+1. Fork the original repository, then clone it locally\\
+2. Create a branch and contribute with your changes\\
+3. Configure upstream fetch from the original repository (so you can update your repo with newer changes from there)\\
+4. Fetch remote changes\\
+5. Push your changes to your repo\\
+6. Open a pull request\\
+
+\chapter{Build Automation Scripts}
+Tutte le dipendenze di un'applicazione vengono memorizzate nell'IDE e sono relative alla macchina che ospita tali configurazioni. Quando la stessa applicazione vuole essere rebuildata su un'altra macchina in molti casi non è semplice riprodurre l'ambiente originale, impedendo il rebuild.
+Gli script di build risolvono tali problemi innanzitutto rendendo l'applicazione indipendente dall'IDE. Tuttavia le sue funziona vanno oltre: il build di script automatizza il processo di build, ma non solo la compilazione, fa anche operazioni di analisi statica automatica, testing, packaging, deploying, generazione di documentazione.
+\section{Makefile}
+Utility Unix che serve per automatizzare la build di un programma, nasce per automatizzare la compilazione, ma per come è fatto un makefile può automatizzare qualsiasi cosa: esso è un insieme di regole quindi, così come lancia la compilazione, può lanciare qualsiasi altra applicazione(e.g. compilazione latex).
+L'idea base di Makefile è di creare dipendenze tra artefatti, come tra file .o e .c quando si compila programmi C.
+Il makefile non è da confondere con un semplice script di shell, poiché quest'ultimo, ad ogni sua esecuzione, andrebbe a ricompilare tutto il programma, e ciò per un programma molto grande è overhead.
+Invece il makefile va a controllare i timestamp delle dipendenze e degli artefatti: se il timestamp della dipendenza è più recente di quello dell'artefatto, questo verrà rigenerato, altrimenti tale operazione non sarà eseguita.
+Un makefile contiene istruzione per creare file (gcc -c main.c) e le dipendenze tra i file.\\
+\includegraphics[scale=0.3]{makefile.png} \\
+viene eseguito invocando il comando \textit{make} nella directory che contiene il Makefile.\\
+
+\section{Apache Ant}
+Concepito per JAva, eredita molti principi dal makefile ed è basato su XML, prevede una serie di task predefiniti utili per compilare, testare e così via.
+A differenza di un makefile che ha comandi di shell, Ant ha dei task predefiniti invocati con dei tag XML.\\
+\includegraphics[scale=0.5]{ant.png} \\
+
+\section{Apache Maven}
+Strumento che aumenta il grado di automazione, rendendo tutto implicito (e.g. tutti i file in src sono da compilare, tutti quelli in test sono per eseguire i test).
+Quindi non è richiesta la definizione di regole esplicite, ma bisogna organizzare la struttura del progetto in un certo modo predefinito. Tale struttura delle cartelle è nota a Maven quindi, se deve compilare o fare altre azion,i le farà senza bisogno di ulteriori configurazioni.
+La peculiarità più importante di Maven è la gestione delle dipendenze. Infatti, Maven scarica automaticamente le dipendenze richieste dal suo repositor2y centrale o da altri repo.\\
+\includegraphics[scale=0.4]{maven.png} \\
+Il file di build pom.xml viene interpretato dal manager che si assicura che le dipendenze e i plugins si trovino in locale altrimenti le recupera dal repo.
+I plugin servono per eseguire dei task(e.g. compilazione java o altro linguaggio, svolgimento test...).
+
+
+\section{Gradle}
+sistema open source per l'automazione dello sviluppo fondato sulle idee di Apache Ant e Apache Maven, che introduce un domain-specific language (DSL) basato su Groovy, al posto della modalità XML usata da Apache Maven per dichiarare la configurazione del progetto. Gli script Gradle possono essere eseguiti direttamente, in contrasto con le definizioni dei progetti Apache Maven (pom.xml).\\
+Gestisce le dipendenze come Maven (struttura progetto ecc).\\
+Il file di build gradle si chiama \textbf{build.gradle} e al suo interno si trovano i \textbf{task} (attività)
+
+\paragraph{Compilazione java}
+nel file build.gradle: apply plugin: 'java'
+
+
+
+
+
+
+
+
+
 
 
 
