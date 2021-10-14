@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[10pt,a4paper]{book}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{varioref}
 \usepackage{amsmath}
@@ -12,6 +12,7 @@
 %///////////////////////////////////////////////////////////////
 %   capitolo 1
 %///////////////////////////////////////////////////////////////
+\chapter{Concetti Fondamentali}
 \section{Concetti Fondamentali}
 \subsection{Programma sequenziale}
 Un programma sequenziale è tipicamente deterministico; ciò significa che date le stesse condizioni, gli stessi input, esso seguirà lo stesso percorso/flusso/thread di esecuzione, producendo lo stesso risultato. Esso ha un singolo thread di controllo.
@@ -164,8 +165,8 @@ esempio: moltiplicazione di matrici ma come viene distribuita la memoria tra i p
 %///////////////////////////////////////////////////////////////
 %   capitolo 2
 %///////////////////////////////////////////////////////////////
-\section{Shared-variable programming}
-\subsection{Concetti fondamentali}
+\chapter{Shared-variable programming}
+\section{Concetti fondamentali}
 \begin{itemize}
 \item stato del programma: snapshot, istantanea che vede il valore di variabili, registri, program counter in un dato momento.
 \item azioni atomiche: istruzione che in maniera indivisibile esamina o modifica lo stato del programma, senza che nessun'altra istruzione possa essere eseguita nel frattempo.
@@ -178,7 +179,7 @@ Ogni esecuzione di un CP produce un storia diversa, cioè si hanno diverse combi
 Il ruolo della sincronizzazione è quello di vincolare le storie che si possono verificare in maniera da ottenere solo storie desiderabili ai fini dei risultati e verificare le proprietà viste in seguito.
 Forme di sincronizzazione sono: \textbf{mutua esclusione}, cioè rendere (far apparire) una sequenza di azioni atomica, indivisibile, e \textbf{sincronizzazione su condizione}, cioè ritardare l'esecuzione di un'azione finché non è vera una condizione.
 
-\subsubsection{Proprietà}
+\subsection{Proprietà}
 \label{sec:prop-prog}
 La proprietà fondamentale di un programma è che esso termini e faccia quello che deve fare correttamente.
 
@@ -196,7 +197,7 @@ La mutua esclusione è un esempio di proprietà di safety in un programma concor
 \item assertional reasoning: (analisi astratta), ragionare per asserzioni, forme logiche dei predicati usate per caratterizzare un insieme di stati del programma e.g. x > 0.
 \end{itemize}
 
-\subsection{Parallelizzazione}
+\section{Parallelizzazione}
 Il requisito fondamentale per poter parallelizzare qualsiasi programma è che esso contenga parti indipendenti. Due parti sono dipendenti l'una dall'altra se una produce risultati di cui l'altra ha bisogno; questo può accadere solo se leggono e scrivono variabili condivise.
 Quindi, due parti di un programma sono indipendenti se non leggono e scrivono le stesse variabili.
 Più \textbf{precisamente}: due operazioni sono indipendenti se il \textit{write set} di ciascuna parte è disgiunta da entrambi i \textit{write set} e \textit{read set} dell'altra parte.
@@ -296,7 +297,7 @@ oc;
 
 Esso funziona come il modello produttore/consumatore e i due processi comunicano tramite un buffer il quale indica il tipo di sincronizzazione richiesta.
 
-\subsection{Sincronizzazione: valore massimo in un array}
+\section{Sincronizzazione: valore massimo in un array}
 Programma sequenziale per il calcolo del massimo:
 \begin{verbatim}
 int m=0;
@@ -337,7 +338,7 @@ m = a[i];>
 
 il primo check fa una scrematura dei valori di a[i] che sono eleggibili a diventare massimi e scarta i valori bassi, e prima di memorizzare \textit{m} si rifà il check sul valore di m in maniera atomica. Il check viene rifatto poiché i processi che lavorano su m sono molteplici.
 
-\subsection{Atomic Actions}
+\section{Atomic Actions}
 possiamo vedere l'esecuzione di un programma concorrente come un interleaving delle azioni atomiche eseguite dai singoli processi. Quando i processi interagiscono, non tutti gli intrecci sono accettabili. Il ruolo della sincronizzazione è quello di prevenire interleaving indesiderati: 
 \begin{itemize}
 \item mutua esclusione: combinando azioni atomiche a grana fine in azioni a grana grossa (composte).
@@ -357,7 +358,7 @@ co x = y+z; // y = 1; z = 2; oc;
 
 x potrà valere: 0, 1, 3 dipende da quando il secondo processo (assegnazione y,z) verrà eseguito. Può accadere che x sarà 2. Come? anomalia, prendo i valori di y e z in \textbf{due istanti diversi}, (cit. un valore di 30 anni prima e uno attuale), il che rende le operazioni \textbf{non atomiche}
 
-\subsubsection{Hardware model usato dal libro}
+\subsection{Hardware model usato dal libro}
 Il modello hardware cui fa riferimento il libro dice che:
 \begin{itemize}
 \item i tipi di base(int) vengono conservati in memoria e lette e scritte come azioni atomiche.
@@ -366,7 +367,7 @@ Il modello hardware cui fa riferimento il libro dice che:
 \item tutti i risultati intermedi vengono salvati in registri o in stack.
 \end{itemize}
 
-\subsubsection{Disjointness Requirement}
+\subsection{Disjointness Requirement}
 Qual è il requisito per cui un'espressione può essere vista come atomica?
 Con questo modello di macchina, se un'espressione \textit{e} in un processo non fa riferimento a una
 variabile alterata da un altro processo, la valutazione dell'espressione \textbf{sembrerà essere
@@ -385,7 +386,7 @@ Sfortunatamente, la maggior parte delle istruzioni in programmi concorrenti che 
 variabili condivise non soddisfano il \textbf{requisito di disgiunzione} spiegato sopra. 
 Tuttavia, un requisito più debole è spesso soddisfatto.
 
-\subsubsection{Proprietà at-most-once}
+\subsection{Proprietà at-most-once}
 \`{E} un requisito più debole del precedente che comunque garantisce che la valutazione dell'espressione e l'eventuale assegnazione possano essere considerate atomiche.
 Riferimento critico in un'espressione è un riferimento ad una variabile che viene modificata da un altro processo.
 
@@ -408,14 +409,14 @@ se l'espressione o la dichiarazione di assegnazione non soddisfa
 la proprietà at-most-once, potremmo ancora volere l'esecuzione atomica. Per far ciò bisogna creare un'azione atomica \textbf{coarse-grained}, di grana grossa, composta da più istruzioni, ed eseguirle come se fossero atomiche, utilizzando le parentesi angolari o primitive di sincronizzazione.
 
 
-\subsection{Sincronizzazione}
+\section{Sincronizzazione}
 La sincronizzazione viene utilizzate per prevenire interleaving indesiderati. Ciò lo si ottiene con: 
 \begin{itemize}
 \item mutua esclusione, che combina azioni atomiche a grana fine in azioni atomiche di grana grossa, insomma fa apparire roba non atomica come se fosse atomica. (e.g. bonifico bancario: mentre trasferisco i soldi non si deve vedere lo stato in cui i soldi non sono né su uno né sull'altro conto; puntatori, insert e remove).
 \item sinc su condizione, ritarda esecuzione di un processo finché non è vera la condizione.
 \end{itemize}
 
-\subsection{AWAIT}
+\section{AWAIT}
 Notazione linguaggio mpd: \begin{verbatim} parentesi angolari < >\end{verbatim}
 await statement: \begin{verbatim} <await (B) S; >\end{verbatim}
 Con questo statement viene garantita la mutua esclusione, ma viene introdotta anche la sincronizzazione su condizione: S è una sequenza di statement mentre B è la condizione di ritardo.
@@ -567,10 +568,9 @@ on multiprocessor -> parallel execution
 
 le politiche pratiche di programmazione non sono Strongly Fair !!!
 
-\section{Lock and Barriers}
+\chapter{Lock and Barriers}
 
-
-\subsection{Problema della sezione critica}
+\section{Problema della sezione critica}
 Il problema della sezione critica è uno dei classici problemi di programmazione concorrente. È stato il primo problema ad essere studiato estensivamente e rimane di interesse dato che la maggior parte dei programmi concorrenti hanno sezioni critiche di codice. Inoltre, la soluzione del problema può essere usata per implementare \textit{statement await} arbitrari.
 Questa sezione definisce il problema e sviluppa una soluzione a grana grossa.
 Nel problema della sezione critica, \textit{n} processi eseguono ripetutamente una sezione critica e poi
@@ -596,7 +596,7 @@ e gli altri processi stanno eseguendo le loro sezioni non critiche o sono termin
 \item Eventual Entry(prima o poi ingresso in SC). Un processo che sta tentando di entrare nella sua sezione critica alla fine ci riuscirà.
 \end{itemize}
 
-\subsubsection{Soluzione}
+\subsection{Soluzione}
 In linguaggio mpd basta usare le parentesi angolari, usando l'await statement. Ma come sono implementate davvero?
 
 \includegraphics[scale=1]{img/cs.png} \\
@@ -604,7 +604,7 @@ Questo vale per due processi che vogliono entrare in sezione critica; per \texti
 
 \includegraphics[scale=1]{img/cs2.png} \\
 
-\subsubsection{Test and Set TS}
+\subsection{Test and Set TS}
 Resta da implementare l'await: \begin{verbatim} <await (!lock) lock=true; >\end{verbatim}
 
 quasi tutte le macchine hanno qualche istruzione speciale per implementare le azioni di sopra, azione che sono garantite essere atomiche anche in ambienti multiprocessore.
@@ -661,7 +661,7 @@ noncritical section;
 
 Questo è chiamato protocollo Test-and-Test-and-Set perché un processo si limita a testare lock finché non c'è la possibilità che ts possa avere successo. Nei due aggiuntivi loop, lock viene solo esaminato, quindi il suo valore può essere letto(e non scritto!) da una cache locale senza interessare altri processori. La contesa della memoria è così ridotta, ma non la fa scomparire. In particolare, quando il lock è azzerato almeno uno ed eventualmente tutti i processi ritardati eseguiranno ts, anche se solo uno può procedere.
 
-\subsubsection{Implementa Await Statement}
+\subsection{Implementa Await Statement}
 Sostituisco le parentesi angolari con i protocolli CSenter e CSexit.
 Ora rimane da implementare la condizione: 
 \begin{verbatim}
@@ -681,7 +681,7 @@ Soluzioni con weakly fair per quest'ulteriore problema sono rappresentate da:
 \item bakery algo
 \end{itemize}
 
-\subsubsection{Tie-Breaker Algorithm}
+\subsection{Tie-Breaker Algorithm}
 I problema: bisogna assicurarsi che non ci sia un processo che monopolizza la SC, altrimenti non è garantita l'eventual entry. Per ottenere una soluzione \textit{fair} i processi dovrebbero fare a turno per entrare in SC.
 
 L'algoritmo del Tie-breaker aggiunge una variabile \textit{last} che indica chi è stato l'ultimo processo ad entrare in SC. Quindi quando si trovano due processi con \textit{in=true}, cioè pronti ad entrare in SC, in base a \textit{last} si decide chi vi entrerà.
@@ -698,7 +698,7 @@ Su n processi è complicata.
 %  The Art of Computer Programming Libro di Donald Knuth (Bibbia) 
 %///////////
 
-\subsubsection{Ticket Algorithm: ding dong. serviamo il numero x}
+\subsection{Ticket Algorithm: ding dong. serviamo il numero x}
 \marginpar{videolezione 2021-10-06}
 Processi, come i clienti della salumeria, vengono serviti/entrano in SC in ordine di arrivo, con l'ordine definito dal biglietto/ticket ottenuto.
 \begin{verbatim}
@@ -731,7 +731,7 @@ Le altre azioni atomiche si implementano facilmente(await con busy-waiting loop 
 
 Senza FA, si utilizza la sezione critica con: \begin{verbatim}CSenter e CSexit: CSenter; turn[i] = number; number = number+1; CSexit;\end{verbatim}
 
-\subsubsection{Bakery Algorithm}
+\subsection{Bakery Algorithm}
 Algoritmo \textit{fair} che non occorre di istruzioni speciali come FA.
 Concetto chiave: il cliente col numero più basso viene servito prima, gli altri si confrontano tra di loro(scusate chi è l'ultimo?). Senza variabile globale \textit{next}.
 I valori di turn saranno unici, non ci sono deadlock, non c'è ritardo ingiustificato ed è garantito il weakly fair scheduling. \\ \\
@@ -794,7 +794,7 @@ rendere il lavoratore anche un coordinatore, ad es. organizzarli in un albero, c
 symmetric n-process barrier is constructed from pairs of simple, two-process barriers.\\ \\ 
 \includegraphics[scale=0.7]{img/butterfly.png} \\ \\
 
-\section{Semafori}
+\chapter{Semafori}
 \marginpar{videolezione 2021-10-08}
 Nascono(1968) per risolvere i problemi dei protocolli basati sul busy waiting(loop che monitora qualcosa rubando cicli di memoria a qualcun altro rubando cpu) che sono complicati e inefficienti, e non c'è distinzione tra le variabili usate per la sincronizzazione e quelle normali usate per calcoli.
 I semafori sono implementabili in molti modi e.g. busywaiting, kernel.
@@ -812,22 +812,22 @@ Un semaforo binario è un semaforo il cui valore è sempre 0 o 1. In particolare
 I semafori supportano direttamente la mutua esclusione e semplici forme di sincronizzazione su condizione.
 Viene qui illustrato il loro utilizzo come soluzione ai problemi di sezione critica, barriere, produttore/consumatore, buffer limitato.
 
-\subsection{Sezione critica: mutua esclusione}
+\section{Sezione critica: mutua esclusione}
 Una precedente soluzione al problema della sezione critica era stato risolto con l'utilizzo della variabile \textit{lock}, la quale veniva settata in base al fatto che un processo si trovasse o meno in sezione critica.
 Questa stessa soluzione può essere implementata con i semafori nativamente, in quanto le operazioni su \textit{lock} sono equivalenti alle \textit{P} e \textit{V}.\\
 \includegraphics[scale=0.7]{img/sem1.png} \\
 
-\subsection{Barriere: segnalazione di eventi}
+\section{Barriere: segnalazione di eventi}
 Si consideri prima il problema di implementare una barriera a due processi. Sono richieste due proprietà: primo, nessuno dei due processi può superare la barriera finché entrambi non sono arrivati. In secondo luogo, la barriera deve essere riutilizzabile poiché in generale gli stessi processi avranno bisogno di sincronizzarsi dopo ogni fase del calcolo (come in un'iterazione).
 Sono richiesti due semafori per sapere ogni volta che un processo arriva alla barriera o vi parte.
 Per risolvere il problema, questi due semafori vengono utilizzati come \textit{variabili flag}, ovvero settati con V quando un processo arriva alla barriera, e resettati con P quando un processo attende.
 Per n processi si usa un array di semafori oppure un processo coordinatore.
 
-\subsection{Produttore/consumatore: split binary semaphores}
-\paragraph{Contesto} il produttore e il consumatore comunicano tramite un buffer condiviso in cui il primo deposita un'informazione e il secondo la preleva. Si considera lo scenario non con due processi, ma con \textbf{n processi}.
-\paragraph{Problema} fondamentale è sincronizzare l'accesso al buffer: per assicurare che il buffer non venga sovrascritto le operazioni di deposito e di prelievo devono alternarsi e i messaggi devono essere ricevuti solo una volta.
-\paragraph{Soluzione} usare i semafori come flag di segnalazione per indicare la raggiunta di un punto di esecuzione critico(inizio e fine delle operazioni di prelievo e deposito) o per indicare il cambiamento dello stato del buffer.
-\paragraph{Implementazione} Si usano due semafori, \textit{empty} e \textit{full}, che indicano se il buffer è vuoto o pieno. Inizialmente, il buffer è vuoto quindi il valore iniziale di \textit{empty} è 1 (cioè, l'evento "rendere il buffer vuoto" si è già verificato). Il valore iniziale di \textit{full} è 0. Quando un produttore vuole eseguire il deposito, deve prima aspettare che il buffer sia vuoto; dopo che un produttore deposita un oggetto, il buffer diventa pieno. Allo stesso modo, quando un consumatore vuole eseguire un \textit{fetch}, deve prima aspettare che il buffer sia pieno, e poi rende il buffer vuoto. 
+\section{Produttore/consumatore: split binary semaphores}
+\subsection{Contesto} il produttore e il consumatore comunicano tramite un buffer condiviso in cui il primo deposita un'informazione e il secondo la preleva. Si considera lo scenario non con due processi, ma con \textbf{n processi}.
+\subsection{Problema} fondamentale è sincronizzare l'accesso al buffer: per assicurare che il buffer non venga sovrascritto le operazioni di deposito e di prelievo devono alternarsi e i messaggi devono essere ricevuti solo una volta.
+\subsection{Soluzione} usare i semafori come flag di segnalazione per indicare la raggiunta di un punto di esecuzione critico(inizio e fine delle operazioni di prelievo e deposito) o per indicare il cambiamento dello stato del buffer.
+\subsection{Implementazione} Si usano due semafori, \textit{empty} e \textit{full}, che indicano se il buffer è vuoto o pieno. Inizialmente, il buffer è vuoto quindi il valore iniziale di \textit{empty} è 1 (cioè, l'evento "rendere il buffer vuoto" si è già verificato). Il valore iniziale di \textit{full} è 0. Quando un produttore vuole eseguire il deposito, deve prima aspettare che il buffer sia vuoto; dopo che un produttore deposita un oggetto, il buffer diventa pieno. Allo stesso modo, quando un consumatore vuole eseguire un \textit{fetch}, deve prima aspettare che il buffer sia pieno, e poi rende il buffer vuoto. 
 Un processo attende un evento eseguendo P sul semaforo appropriato e segnala un evento eseguendo V.
 
 \textit{empty} e \textit{full} sono entrambi \textbf{semafori binari}. Insieme
@@ -837,23 +837,41 @@ Quindi tutte le dichiarazioni tra qualsiasi P e il successivo V vengono eseguite
 In particolare, ogni volta che un processo si trova tra un P e un V, i semafori sono tutti 0, e quindi nessun altro processo può completare un P finché il primo processo non esegue una V.\\ \\
 \includegraphics[scale=0.7]{img/split.png} \\
 
-\paragraph{Considerazioni} Se i dati vengono prodotti approssimativamente alla stessa velocità con cui vengono consumati, un processo non dovrebbe generalmente aspettare molto tempo per accedere al singolo buffer. Tuttavia, l'esecuzione del produttore e del consumatore è comunemente \textbf{bursty}(a raffica).
+\subsection{Considerazioni} Se i dati vengono prodotti approssimativamente alla stessa velocità con cui vengono consumati, un processo non dovrebbe generalmente aspettare molto tempo per accedere al singolo buffer. Tuttavia, l'esecuzione del produttore e del consumatore avviene comunemente in modalità \textbf{bursty}(a raffica).
 Per esempio, un produttore potrebbe produrre diversi elementi in rapida successione, poi fare altri calcoli prima di produrre un'altra serie di elementi. In questi casi, una capacità del \textbf{buffer più grande} di uno può aumentare significativamente le prestazioni riducendo il numero di volte che i processi si bloccano. (Questo è un esempio del classico compromesso tempo/spazio nell'informatica).
 
-\subsection{Bounded Buffers: Resource Counting}
+\section{Bounded Buffers: Resource Counting}
+Viste le considerazioni precedenti verrà usato un buffer di dimensioni maggiori di uno riducendo il numero di processi bloccati.
+Si assume la presenza di un consumatore e un produttore. Il produttore deposita messaggi nello shared buffer e il consumatore li preleva. Il buffer contiene una coda di messaggi depositati ma non ancora prelevati. Il buffer è costituito da un array circolare in cui \textit{front} è l'indice del messaggio nella parte anteriore della coda e \textit{rear} è l'indice del primo slot vuoto. Inizialmente valgono entrambi 0.\\
+Il produttore deposita un messaggio in questo modo: $ buf[rear] = data; rear = (rear+1)\% n $
+E il consumatore preleva con: $ result=buf[front]; front=(front+1)\%n $\\
+L'operatore modulo (\%) viene usato per assicurare che i valori di \textit{front} e \textit{rear} siano sempre compresi tra = e n-1.\\
+\includegraphics[scale=0.4]{img/arraycirc.png} \\
+Gli slot neri sono pieni, gli altri vuoti.\\
+Data la presenza solo di un produttore e un consumatore, le operazioni di deposito e prelievo appaiono come atomiche, in quanto un solo processo agirà sulla variabile \textit{front} e solo un processo agirà sulla variabile \textit{rear}, quindi vala la proprietà at-most-once.\\ \\
+\includegraphics[scale=0.5]{img/bounded.png}\\
+Nel codice, i semafori sono utilizzati come contatori di risorse: ognuno conta il numero di unità di una risorsa. \textit{empty} conta il numero di slot vuoti nel buffer, e \textit{full} conta gli slot pieni. Quando (a bocce ferme) nessun processo sta depositando o prelevando, la somme dei due semafori vale \textit{n} (che è il numero degli slot del buffer). 
+Si suppone ora che ci siano due o più produttori. Quindi, se ci sono almeno due slot liberi, entrambi i produttori possono depositare nel buffer; problema: nel peggiore dei casi può accadere che entrambi vadano a depositare nello stesso slot. Ciò accade se entrambi assegnano a buf[rear] prima che uno dei due incrementi rear. Lo stesso avverrebbe se ci fossero due (o più) consumatori, con entrambi che provano a prelevare allo stesso tempo ottenendo lo stesso messaggio. Si giunge quindi alla soluzione che le operazioni di deposito e di prelievo sono sezioni critiche e vadano eseguite in mutua esclusione. Ciò si ottiene implementando la soluzione con due semafori che proteggono ogni sezione critica.\\ \\
+\includegraphics[scale=0.5]{img/bound2.png} \\
+I due problemi sono stati risolti separatamente: prima la sincronizzazione tra un produttore e un consumatore, poi la sincronizzazione tra più produttori e più consumatori. Alla fine si sono combinate le due soluzioni ai sottoproblemi per trovare la soluzione al problema completo. Approccio da utilizzare anche per il problema dei lettori/scrittori.
 
+\section{Problema dei filosofi}
+La soluzione al problema dei filosofi illustra come implementare la mutua esclusione tra processi che competono per accedere a variabili condivise.
+Problema: ci sono 5 filosofi e 5 bacchette. Ogni filosofo ha una bacchetta destra e una a sinistra e può usare solo quelle(sono richieste entrambe per mangiare). Il programma che simula il comportamento dei filosofi deve evitare la situazione in cui tutti i filosofi sono affamati e nessuno può prendere due bacchette, esempio ognuno ha una bacchetta e rifiuta di lasciarla(deadlock).\\
+Chiaramente, due filosofi vicini non possono mangiare contemporaneamente, e, essendoci 5 bacchette, solo due filosofi alla volta possono mangiare contemporaneamente.
 
+Risolvere il problema richiede la programmazione delle azioni "prendere la bacchetta" e "rilasciare la bacchetta", poiché le bacchette sono la risorsa condivisa.
+Ogni bacchetta è come un blocco della sezione critica: può essere tenuto al massimo da un filosofo alla volta. Quindi, possiamo rappresentare i bacchette con un array di
+semafori inizializzati a uno. Il prelievo di un bacchetta è quindi simulato eseguendo un'operazione P sul semaforo appropriato, e mettere giù una forchetta è simulato
+eseguendo un'operazione V sul semaforo. I processi sono essenzialmente identici, quindi è naturale pensare di far eseguire azioni identiche. Per esempio, ogni processo potrebbe prendere prima la sua bacchetta sinistra e poi la sua bacchetta destra. Tuttavia, questo potrebbe portare ad uno stallo.
+In particolare, se tutti i filosofi hanno preso la loro bacchetta sinistra, allora tutti aspetterebbero all'infinito cercando di prendere la loro bacchetta.
+Condizione necessaria per un deadlock è l'attesa circolare, cioè un processo attende una risorsa in possesso di un secondo processo, che a sua volta attende una risorsa da un terzo processo e così via. Per evitare il deadlock è quindi sufficiente evitare questa situazione di attesa circolare. Per questo problema basta che l'ultimo processo filosofo prenda la bacchetta di destra, mentre gli altri prendono tutti quella di sinistra. In alternativa, i filosofi in posizione pari prendono la bacchetta in un ordine e quelli in posizione dispari nell'ordine inverso.
 
-
-\subsection{Problema dei filosofi}
-risolto con 5 semafori
-
-
-\subsection{Lettori e scrittori}
+\section{Lettori e scrittori}
 Due tipi di processi, lettori e scrittori, condividono un'area di memoria condivisa. I processi lettori accedono alla memoria condivisa per leggerne il contenuto, mentre i processi scrittori vi accedono sia per leggere che per scrivere.
-Problematiche di concorrenza e interferenza si evitano facendo operare i processi in mutua esclusione, banalmente: il processo scrittore deve accedere alla memoria condivisa in maniera esclusiva, mentre i lettori devono poterla leggere concorrentemente se nessuno scrittore sta accedendo alla memoria.
+Problematiche di concorrenza e interferenza si evitano facendo operare i processi in mutua esclusione, banalmente. Condizioni di sincronizzazione sono che il processo scrittore deve accedere alla memoria condivisa in maniera esclusiva, mentre i lettori devono poterla leggere concorrentemente se nessuno scrittore sta accedendo alla memoria.
 
-\subsubsection{Soluzione 1: mutua esclusione}
+\subsection{Soluzione 1: mutua esclusione}
 Rappresenta una soluzione \textit{overconstrain}, pone troppi vincoli(più vincoli del necessario), in quanto blocca troppo i processi, diminuendo la concorrenza. Infatti questa soluzione tratta il problema come un semplice caso di mutua esclusione. Funzionante, ma non efficiente. \\ \\
 \includegraphics[scale=0.41]{img/over.png} \\
 \bigskip 
@@ -866,21 +884,65 @@ Per implementare tutto questo si usa la variabile shared \textit{nr}, numero dei
 In sintesi questa soluzione considera i lettori come un gruppo. Poi utilizza due semafori, uno per la gestione della variabile nr l'altro per gestire la mutua esclusione tra il gruppo dei lettori e ciascuno scrittore.
 Pur funzionante, tale soluzione è \textit{not fair} perché c'è la possibilità che gli scrittori rimangano bloccati per sempre se ci sono sempre lettori che si aggiungono. Si dice che viene data la preferenza ai lettori.
 
-\subsubsection{Soluzione 2: tecnica del passaggio del testimone}
-Questa soluzione impiega semafori binari splittati per fornire la mutua esclusione e segnalare processi ritardati.
-La tecnica del passaggio del testimone può essere utilizzata per implementare dichiarazioni arbitrarie in attesa e quindi per attuare condizioni arbitrarie sincronizzazione. La tecnica può essere utilizzata anche per controllare con precisione l'ordine in cui si risvegliano i processi sospesi.
+\subsection{Soluzione 2: tecnica del passaggio del testimone}
+Questa soluzione impiega semafori binari splittati per fornire la mutua esclusione e segnalare processi ritardati. Inoltre, data una opportuna strutturazione del codice, è possibile decidere esattamente quale processo attivare, come da programma; quindi si può decidere di dare la preferenza ai lettori o agli scrittori, oppure ancora, di alternarla.\\
+La tecnica del passaggio del testimone può essere utilizzata per implementare dichiarazioni arbitrarie di \textit{statement await} e quindi per attuare condizioni di sincronizzazione arbitrarie. La tecnica può essere utilizzata anche per controllare con precisione l'ordine in cui si risvegliano i processi sospesi.
 
-La logica di questa soluzione è contare il numero di ogni tipo di processo che cerca di accedere al database, quindi vincolare i valori dei contatori. In pratica, dati \textit{nr} e \textit{nw} interi non negativi che rappresentano il numero di lettori e scrittori che stanno accedendo alla memoria, gli stati cattivi da evitare sono quando sia \textit{nr} che \textit{nw} sono positivi, o quando \textit{nw} è maggiore di 1.  \\
+La logica di questa soluzione è contare il numero di ogni tipo di processo che cerca di accedere al database, quindi vincolare i valori dei contatori. In pratica, dati \textit{nr} e \textit{nw} interi non negativi che rappresentano il numero di lettori e scrittori che stanno accedendo alla memoria, gli stati cattivi da evitare sono quando sia \textit{nr} che \textit{nw} sono positivi, o quando \textit{nw} è maggiore di 1: \\
 \includegraphics[scale=0.41]{img/baton.png} \\ \\
-Sotto il negato dello stato cattivo che rappresenta lo stato buono. \\ 
+Invece qui il negato dello stato cattivo che rappresenta lo stato buono. \\ 
 \includegraphics[scale=0.41]{img/baton2.png} \\
 Il primo termine dice che lettori e scrittori non possono accedere contemporaneamente al database; il secondo dice che c'è al massimo uno scrittore attivo.
 
 Il predicato RW deve essere un invariante globale, vero sempre.\\
 
-\includegraphics[scale=0.41]{img/baton2.png} \\
-Condizione di guardia: condizione che deve essere rispettata prima che un processo entri in attività(lettura memoria shared).
-Per il lettore la c.d.g. è $ nw == 0 $, mentre per lo scrittore è \textit{(nr==0 AND nw==0)} (solitudine) .
+L'idea è utilizzare questo schema di soluzione:\\
+\includegraphics[scale=0.41]{img/baton3.png} \\
+Ogni volta che un lettore va in azione, in mutua esclusione, incrementa la variabile \textit{nr}, legge e la decrementa.
+Lo scrittore, analogamente, incrementa la variabile \textit{nw}, scrive e la decrementa.
+
+Condizione di guardia (o di attesa): condizione che deve essere rispettata prima che un processo entri in attività(lettura memoria shared).
+Per il lettore la c.d.g. è $ nw == 0 $, mentre per lo scrittore è \textit{(nr==0 AND nw==0)} (solitudine).
+
+Per i decrementi, invece, non c'è bisogno di una condizione di guardia, perché non è necessario ritardare un processo che sta rilasciando una risorsa, ma basta che la restituisce.\\\includegraphics[scale=0.41]{img/baton4.png} \\
+In questa soluzione, le condizioni di guardia sono state espresse mediante \textit{statement await}: i lettori attendono che nw==0, gli scrittori che nr==0 e nw==0. Tuttavia questo schema di soluzione va opportunamente implementato perché gli statement await non sono eseguibili così come sono. 
+La tecnica generale utilizzata qui per trattare gli await è quella del passaggio del testimone.
+In particolare, viene usato il semaforo binario \textit{e} (entry) per controllare l'accesso in mutua esclusione ad ogni statement await(vedi codice sotto).
+Per ogni condizione verranno utilizzati un semaforo e un contatore. Il semaforo per ritardare i processi finché la guardia viene verificata, il contatore per sapere quanti processi sono stati ritardati.
+Il semaforo \textit{r} sarà quello associato alla guardia nei processi lettori e \textit{dr} il contatore dei processi lettori ritardati. Analogamente \textit{r} e \textit{dr} saranno il semaforo e il contatore dei processi scrittori.
+
+\includegraphics[scale=0.41]{img/baton5.png} \\
+commento al codice: per il Reader si inizia con P(e) per richiedere la mutua esclusione. Dopodiché se $ nw>0 $, ossia la condizione nw==0 non è verificata, il processo va stoppato, quindi viene incrementato il contatore dei processi lettori ritardati. Viene rilasciata la mutua esclusione con V(e). Poi con la P(r) si ritarda il processo; questa operazione va fatta dopo la V(e)(rilascio mutex).
+Se invece la condizione nw==0 è verificata, il numero dei lettori viene incrementato e, dopo la SIGNAL, il processo legge il database rientra in mutex con P(e) per decrementare \textit{nr} e richiama la SIGNAL(che penserà a rilasciare la mutex dato che termina con V(e)vedi dopo).
+Per lo scrittore funziona allo stesso modo, cambia la condizione da verificare ovvero nr==0 and nw==0.\\ 
+
+\includegraphics[scale=0.41]{img/signal.png} \\
+Questo codice gestisce la politica di scheduling dei processi ed è usato per uscire da ogni statement atomico, segnalando esattamente uno dei tre semafori. In particolare, se non ci sono scrittori attivi e c'è almeno un lettore sospeso, allora un lettore può essere svegliato eseguendo V(r). Se non ci sono lettori o scrittori attivi e c'è uno scrittore sospeso, allora uno scrittore può essere risvegliato eseguendo V(w). Altrimenti - cioè, se non c'è nessun processo sospeso che possa procedere in sicurezza - viene segnalato il semaforo di ingresso eseguendo V(e).
+Così com'è riportata, la SIGNAL favorisce i lettori. Invertendo l'if con l'else if si favoriscono gli scrittori. Alternativamente, con l'uso di una variabile, le condizioni si possono alternare in maniera tale da dare prima la preferenza agli scrittori e poi ai lettori, e viceversa in un secondo momento.
+
+
+\chapter{Monitor}
+I semafori sono meccanismi di sincronizzazione fondamentali. Essi permettono la facilmente la programmazione della muta esclusione e del risveglio di processi. Possono essere utilizzati per risolvere qualsiasi problema di sincronizzazione. Tuttavia costituiscono un meccanismo a basso livello, il che implica la facilità di commettere errori utilizzandoli: mancato uso di una P o V, uso di troppe P e V, fallimento nel proteggere una sezione critica. Inoltre, con i semafori sia la mutex che la sinc su condizione sono programmate usando le stesse primitive (P e V). Questo rende difficile individuare lo scopo di una data P o V senza osservare le altre operazioni sullo stesso semaforo.\\
+Un monitor è un \textbf{meccanismo di astrazione dei dati} che fornisce l'incapsulamento di un oggetto astratto e fornisce un insieme di operazioni che sono gli unici mezzi con cui quell'oggetto viene manipolato.
+In particolare, un monitor contiene variabili che memorizzano lo stato dell'oggetto e procedure che implementano operazioni sull'oggetto. Un processo può accedere alle variabili in un monitor solo chiamando una delle procedure del monitor. La \textbf{mutua esclusione} è fornita implicitamente assicurando che le procedure
+nello stesso monitor non siano eseguite simultaneamente (simile all'await dei semafori).
+La \textbf{sincronizzazione su condizione} nei monitor è fornita esplicitamente per mezzo di \textbf{variabili condition}.
+Quando un programma concorrente usa i monitor per la comunicazione e la sincronizzazione, contiene due tipi di moduli: processi attivi e monitor passivi.
+Assumendo che tutte le variabili condivise siano all'interno dei monitor, due processi interagiscono (si sincronizzano) chiamando solo procedure contenute nello stesso monitor. 
+I benefici di questa modularizzazione sono importanti: primo, un processo (o l'utente che utilizza il monitor) che chiama una procedura di un monitor può ignorare come essa è implementata; tutto ciò che conta sono gli effetti visibili della chiamata della procedura. 
+Secondo, il programmatore di un monitor può ignorare come o dove le procedure del procedure del monitor sono usate e può cambiare il modo in cui il monitor è implementato, fintanto che le procedure visibili e i loro effetti non vengono cambiati.
+Questi benefici rendono possibile progettare ogni processo e monitor in modo relativamente indipendentemente. Questo rende un programma concorrente più facile da sviluppare e anche più facile da capire.
+Applicazioni dei monitor: qualcosa di simile in Java, librerie per la programmazione concorrente e.g. PThreads(P di POSIX Portable Operating System Interface for Unix indica la famiglia degli standard definiti dall'IEEE denominati formalmente IEEE 1003 ).
+
+\section{Sintassi e Semantica}
+
+
+
+
+
+
+
+
 
 
 
