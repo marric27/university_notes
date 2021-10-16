@@ -120,7 +120,7 @@ $ y = a_{1}u+a_{2}w $\\
 $ y = a_{1}u^{2}+a_{2}uw+a_{3}w^{2} $
 
 Questi due modelli, anche essendo diversi tra loro, lineare e quadratico, possono essere gestiti con lo stesso strumento che è la regressione lineare.
-La seconda equazione è risolvibile nelle incognite $  a_{1}, a_{2}, a_{3}$ perché esse compaiono in maniera lineare e \textit{u} e \textit{w} sono note. Ciò vale anche se u e w o altre variabili non compaiono in modo lineare. (tabellina slide)\\
+La seconda equazione è risolvibile nelle incognite $  a_{1}, a_{2}, a_{3}$ perché esse compaiono in maniera lineare e \textit{u} e \textit{w} sono note, quindi valutando il legame tra le incognite e i dati e non tra le variabili dipendenti e indipendenti. Ciò vale anche se u e w o altre variabili non compaiono in modo lineare. (tabellina slide)\\
 Questa peculiarità consente di applicare la stessa tecnica, basata sui minimi quadrati, per individuare i migliori valori possibili da assegnare alle incognite $ a_{1}, a_{2}, a_{3} $ per \textit{fittare} al meglio entrambi i modelli ai dati a disposizione. Questo approccio, cioè utilizzare i dati a disposizione, immaginare che il modello sia lineare nei parametri e trovare i migliori valori dei parametri, si chiama regressione lineare.
 
 \subsection{Modelli lineari}
@@ -138,7 +138,7 @@ scostamento, sistema di equazioni approssimate,
 Si assume che l'equazione approssimata possa diventare esatta aggiungendo il termine $e_{i}$, errore di equazione, scostamento.\\
 
 $ y_{i}=ax_{i}+b+e_{i} $\\
-Si aggiunge \textit{e} altrimenti il sistema sarebbe approssimato: $ y_{i}~ax_{i}+b $
+Si aggiunge \textit{e} altrimenti il sistema sarebbe approssimato: $ y_{i} \sim ax_{i}+b $
 
 Con l'aggiunta di \textit{e} bisogna risolvere il sistema anche rispetto ad essa. Non rappresenta una terza incognita, perché il numero di \textit{e} è pari al numero di equazioni.
 Ora il numero di incognite sarà il numero di e + i due parametri a e b. Il sistema non è risolvibile poiché si hanno più incognite che equazioni.\\
@@ -158,40 +158,84 @@ Qui interviene l'approccio dell'ottimizzazione, ovvero la scelta della soluzione
 Errore quadratico medio $ \dfrac{1}{N} \sum_{i=1}^N e_{i}^{2} $
 
 Bisogna prendere valori di $ \theta $ tali che l'errore quadratico medio sia piccolo.
-Come si ottengono i valori di e_{i}?
-y_{i} e $ \varphi_{i}^{T} $ sono note quindi: $ e_{i}=y_{i}-\varphi_{i}^{T} \theta $
+Come si ottengono i valori di $e_{i}$?
+$y_{i}$ e $ \varphi_{i}^{T} $ sono note quindi: $ e_{i}=y_{i}-\varphi_{i}^{T} \theta $
 $ e_{i}(\theta) $ dipende da $ \theta $
 
 Tutte le componenti dell'errore saranno in funzione di $ \theta $.
 
 il problema di regressione lineare consiste nel risolvere questo problema di ottimizzazione:\\
-\includegraphics[scale=1]{err.png} \\
+\includegraphics[scale=0.41]{err.png} \\
 in cui 
 
 
 
 
 
+\section{Modelli Dinamici}
+Finora abbiamo visto come queste tecniche di regressione lineare possono essere applicate per modellare e stimare dei legami di tipo statico. statico ossia funzioni tra regressori e misure.
+Le stesse tecniche possono essere applicate anche per modellare dei comportamenti di tipo dinamico.
+\subsection{Identificazione modelli dinamici}
+L'applicazione di tecniche di regressione lineare al caso di modelli dinamici porta a quella disciplina dei controlli che si chiama \textbf{identificazione dei modelli dinamici}. Dinamico i dati che andiamo a misurare dipendono dal tempo, quindi dalla storia precedente e dall'evoluzione del modello stesso. 
+Per modellare questo comportamento andiamo ad utilizzare un modello dinamico descritto dall'equazione alle differenze di ordine \textit{p}.
+Finora avevamo detto che le misure dipendevano da alcune variabili indipendenti. In questo caso andiamo a modellare il comportamento dinamico di una variabile.
 
+\begin{equation}
+y(k)=a_{1}y(k-1)+a_{2}y(k-2)+...+a_{p}y(k-p)
+\end{equation}
 
+L'idea è quella di immaginare che il fenomeno possa essere espresso come combinazione lineare dei valori che la variabile y, mia misura, aveva ai passi precedenti.
 
-\subsection{Modelli regressivi}
+Ci sono analogie con le tecniche utilizzate in precedenza: $ y(k) \longleftrightarrow y_{i} $  \\ \\
+e i valori della variabile al passo precedente saranno l'equivalente dei valori dei regressori del modello di regressione lineare $ [y(k-1) \, y(k-2)...y(k-p)]\longleftrightarrow \varphi_{i}^{T} $ \\ \\
+così come i coefficienti dell'equazione alle differenze sono i parametri della regressione lineare da identificare:
+$ [a_{1}\,a_{2}\,...\,a_{p}]_{T} \longleftrightarrow \theta $ \\
+A questo punto, portatici nel caso della regressione lineare ($ y_{i}=\varphi_{i}\theta $), possiamo applicare la tecnica di ottimizzazione ai minimi quadrati e trovare i valori di $ [a_{1}\,a_{2}\,...\,a_{p} $ che meglio approssimano in termini di errore quadratico medio l'equazione ricorsiva(eq. 1).
+Questo modello dato dall'eq 1 è detto modello \textbf{autoregressivo}, poiché è una regressione fatta su se stesso.
+Ma se ho un modello AR, le osservazione da cosa dipendono? Dalle osservazioni precedenti, si dice quindi che il sistema è autonomo, non ha bisogno di interagire col mondo esterno e non c'è modo di influenzare le osservazioni.(e.g. andamento titolo azionario)\\
 
-L'analisi della regressione è una tecnica usata per analizzare una serie di dati che consistono in una variabile dipendente e una o più variabili indipendenti. Lo scopo è stimare un'eventuale relazione funzionale esistente tra la variabile dipendente e le variabili indipendenti. La variabile dipendente nell'equazione di regressione è una funzione delle variabili indipendenti più un termine d'errore.
-L'analisi della regressione può essere usata per effettuare previsioni (ad esempio per prevedere dati futuri di una serie temporale), inferenza statistica, per testare ipotesi o per modellare delle relazioni di dipendenza.
+Qualora volessimo avere una relazione con altri dati, l'equazione alle differenze può essere modificata aggiungendo una combinazione lineare di un ingresso esogeno, esterno:\\
+\begin{equation}
+y(k)=a_{1}y(k-1)+...+a_{n}y(k-n)+b_{0}u(k)+b_{1}u(k-1)+\,...\,+b_{m}u(k-m)+e(k)
+\end{equation}
+questo è detto modello autoregressivo esogeno (ARX).
+L'equazione alle differenze è di ordine \textit{n} (occorre tener memoria degli \textit{n} valori precedenti della \textit{y per generare il valore corrente}) ed il numero dei parametri del modello è pari a p=n+m+1.
 
+\subsection{Algoritmo LMS: Least Mean Square}
+Algoritmo per risolvere problemi di regressione lineare.
+Come sempre, il modello che andiamo ad individuare dipende dai dati a nostra disposizione. La bontà del modello, parametri vicini ai valori veri, dipende da quanto i dati a disposizione siano rappresentativi del comportamento del sistema, fenomeno.
+Se le osservazioni fatte sono legate soltanto a un piccolo aspetto, una specifica fase del processo, ma non tutto il range del comportamento del processo stesso. Quindi $ \theta $ è funzione di $\phi$ e $y$, e $\phi$ e $y$ hanno a che fare con le osservazioni e con i dati del sistema.\\
+\textit{(Garbage in, Garbage out)}\\
+Ci si potrebbe basare anche sul fatto che più osservazioni vengono fatte, più è probabile che il modello stia ricoprendo ogni aspetto del sistema e che non sia legato a soli certi aspetti specifici. Quindi se le osservazioni sono molte, equidistribuite, non polarizzate, ci avvicineremo di più ai valori "veri".
 
+Ma quando possiamo fare la prima stima? quante osservazioni prima della stima dei parametri?
+Se ho 50 osservazioni, aspetto che ne arrivino altre? e quando arrivano faccio la stima delle nuove o metto tutto insieme e stimo?\\
 
+Ogni volta volta che arriva una nuova osservazione l'equazione normale(matrice di eq norm) va riformulata e risolta, non elaborando solo la nuova misura.
+Questo algoritmo è detto minimi quadrati a lotti, lotti perché per risolvere devo vere tutte le osservazioni memorizzate.
 
+Meglio sarebbe avere un algoritmo che dopo una nuova misura il nuovo vettore dei parametri deve essere aggiornato, e per aggiornarlo devo osservare solo la nuova osservazione e capire di quanto scostarmi dal vecchio valore dei parametri.\\
 
+Algoritmo che esprime la nuova misura in funzione del valore del parametro precedente si chiama \textbf{RLS}, minimi quadrati ricorsivi.
+Molto comodo perché può funzionare sempre, ad ogni osservazione, anche in realtime.
 
+Least mean square, minimo errore quadratico medio
+Abbiamo ipotizzato il modello di regressione lineare:
+\begin{equation}
+h_\theta(x)=\varphi^T\theta=\theta_0+\sum_{j=1}^{p-1}x_j\theta_j
+\end{equation}
+dove $ \varphi $ è il vettore riga dei regressori e $ \theta $ è il vettore dei parametri.
+Con il modo di scriverlo in sommatoria, viene evidenziato il termine noto $ \theta_0 $, mentre gli altri parametri vanno a moltiplicare gli altri valori delle variabili indipendenti.
+La funzione da minimizzare è l'errore quadratico medio:
+\begin{equation}
+J(\theta)=\frac{1}{2} \sum_{i=1}^N(y^{(i)}-h_{\theta}(x^{(i)}))^2
+\end{equation}
+cioè l'osservazione meno la stima ottenuta utilizzando i parametri e il vettore dei regressori.
 
-
-
-
-
-
-
+Come si risolve il problema ai minimi quadrati formulato in questa maniera?
+Col gradiente:\\
+$ \dfrac{\partial}{\partial \theta_j}J(\theta)=-\sum_{i=1}^N((y^{(i)}-h_\theta (x^{(i)}))x_j^{(i)} $
+qui si ragioni in termini di scalari, quindi con la componente j-esima del gradiente
 
 
 

@@ -647,15 +647,15 @@ La contesa della memoria e l'overhead di invalidamento della cache possono esser
 \begin{verbatim}
 bool lock = false;
 process CS[i = 1 to n] {
-while (true) {
-while (lock) skip;
-while (TS(lock)) {
-while (lock) skip;
-}
-critical section;
-lock = false;
-noncritical section;
-}
+ while (true) {
+   while (lock) skip;
+   while (TS(lock)) {
+     while (lock) skip;
+   }
+   critical section;
+    lock = false;
+   noncritical section;
+ }
 }
 \end{verbatim}
 
@@ -843,7 +843,7 @@ Per esempio, un produttore potrebbe produrre diversi elementi in rapida successi
 \section{Bounded Buffers: Resource Counting}
 Viste le considerazioni precedenti verrà usato un buffer di dimensioni maggiori di uno riducendo il numero di processi bloccati.
 Si assume la presenza di un consumatore e un produttore. Il produttore deposita messaggi nello shared buffer e il consumatore li preleva. Il buffer contiene una coda di messaggi depositati ma non ancora prelevati. Il buffer è costituito da un array circolare in cui \textit{front} è l'indice del messaggio nella parte anteriore della coda e \textit{rear} è l'indice del primo slot vuoto. Inizialmente valgono entrambi 0.\\
-Il produttore deposita un messaggio in questo modo: $ buf[rear] = data; rear = (rear+1)\% n $
+Il produttore deposita un messaggio in questo modo:\\ $ buf[rear] = data; rear = (rear+1)\% n $\\
 E il consumatore preleva con: $ result=buf[front]; front=(front+1)\%n $\\
 L'operatore modulo (\%) viene usato per assicurare che i valori di \textit{front} e \textit{rear} siano sempre compresi tra = e n-1.\\
 \includegraphics[scale=0.4]{img/arraycirc.png} \\
@@ -923,7 +923,7 @@ Così com'è riportata, la SIGNAL favorisce i lettori. Invertendo l'if con l'els
 
 \chapter{Monitor}
 I semafori sono meccanismi di sincronizzazione fondamentali. Essi permettono la facilmente la programmazione della muta esclusione e del risveglio di processi. Possono essere utilizzati per risolvere qualsiasi problema di sincronizzazione. Tuttavia costituiscono un meccanismo a basso livello, il che implica la facilità di commettere errori utilizzandoli: mancato uso di una P o V, uso di troppe P e V, fallimento nel proteggere una sezione critica. Inoltre, con i semafori sia la mutex che la sinc su condizione sono programmate usando le stesse primitive (P e V). Questo rende difficile individuare lo scopo di una data P o V senza osservare le altre operazioni sullo stesso semaforo.\\
-Un monitor è un \textbf{meccanismo di astrazione dei dati} che fornisce l'incapsulamento di un oggetto astratto e fornisce un insieme di operazioni che sono gli unici mezzi con cui quell'oggetto viene manipolato.
+Un monitor è un \textbf{meccanismo di astrazione dei dati} che fornisce \linebreak  l'incapsulamento di un oggetto astratto e fornisce un insieme di operazioni che sono gli unici mezzi con cui quell'oggetto viene manipolato.
 In particolare, un monitor contiene variabili che memorizzano lo stato dell'oggetto e procedure che implementano operazioni sull'oggetto. Un processo può accedere alle variabili in un monitor solo chiamando una delle procedure del monitor. La \textbf{mutua esclusione} è fornita implicitamente assicurando che le procedure
 nello stesso monitor non siano eseguite simultaneamente (simile all'await dei semafori).
 La \textbf{sincronizzazione su condizione} nei monitor è fornita esplicitamente per mezzo di \textbf{variabili condition}.
@@ -932,27 +932,43 @@ Assumendo che tutte le variabili condivise siano all'interno dei monitor, due pr
 I benefici di questa modularizzazione sono importanti: primo, un processo (o l'utente che utilizza il monitor) che chiama una procedura di un monitor può ignorare come essa è implementata; tutto ciò che conta sono gli effetti visibili della chiamata della procedura. 
 Secondo, il programmatore di un monitor può ignorare come o dove le procedure del procedure del monitor sono usate e può cambiare il modo in cui il monitor è implementato, fintanto che le procedure visibili e i loro effetti non vengono cambiati.
 Questi benefici rendono possibile progettare ogni processo e monitor in modo relativamente indipendentemente. Questo rende un programma concorrente più facile da sviluppare e anche più facile da capire.
-Applicazioni dei monitor: qualcosa di simile in Java, librerie per la programmazione concorrente e.g. PThreads(P di POSIX Portable Operating System Interface for Unix indica la famiglia degli standard definiti dall'IEEE denominati formalmente IEEE 1003 ).
+Applicazioni dei monitor: qualcosa di simile in Java, librerie per la programmazione concorrente e.g. PThreads (P di POSIX Portable Operating System Interface for Unix indica la famiglia degli standard definiti dall'IEEE denominati formalmente IEEE 1003).
 
-\section{Sintassi e Semantica}
+\section{Sintassi(in MPD) e Semantica}
+Un monitor è usato per raggruppare la rappresentazione e l'implementazione di una risorsa condivisa (classe). Ha un'interfaccia e un corpo. L'interfaccia specifica le operazioni (metodi) fornite dalla risorsa, visibili all'esterno. Il corpo contiene variabili che rappresentano lo stato della risorsa e le procedure che implementano le operazioni nell'interfaccia.\\
+I monitor sono dichiarati e creati in modi diversi nei diversi linguaggi. \\
+\includegraphics[scale=0.51]{img/monitor.png} \\
+Le \textbf{variabili permanenti} sono condivise da tutte le procedure all'interno del monitor; sono chiamate variabili permanenti perché esistono e mantengono i loro valori finché esiste il monitor. Le procedure possono avere variabili locali, diverse da quelle permanenti.
+Gli \textbf{statement di inizializzazione} servono a portare il monitor in uno stato accettabile; siccome lo stato deve rimanere accettabile(deve verificare delle proprietà) per tutta l'esistenza del monitor si parla di invariante del monitor(visto dopo).
+Le \textbf{procedure} implementano le operazioni visibili.
 
+Un monitor ha tre proprietà che sono conseguenza del fatto che il monitor è istanza di un dato astratto, oggetto.
+\begin{itemize}
+\item solo il nome delle procedure è visibile fuori dal monitor, così solo tramite esse si può accedere al monitor e alterare lo stato delle risorse rappresentato dalle variabili permanenti.
+\item gli statement nel monitor non possono accedere alle variabili che si trovano fuori dal monitor.
+\item le variabili permanenti sono inizializzate prima della chiamata di qualsiasi procedura.
+\end{itemize}
 
+Una caratteristica del monitor è che può essere sviluppato in maniera isolata. Ciò significa che il programmatore non può sapere a priori l'ordine in cui le procedure del monitor vengono chiamate. Ogni volta che l'ordine di esecuzione è indeterminato, è utile definire un predicato che sia vero indipendentemente dall'ordine di esecuzione. In particolare, un \textbf{invariante del monitor} è un predicato che specifica gli stati "ragionevoli" delle variabili permanenti quando nessun processo vi accede. Il codice di inizializzazione in un monitor deve stabilire l'invariante; ogni procedura deve mantenerlo.
 
+\subsection{Mutex}
+Un monitor è un'entità passiva che viene condivisa da processi che sono concorrentemente in esecuzione, quindi è richiesta la mutex e la sinc su condizione.
+La mutua esclusione nel monitor è implicita, evita le interferenze ed è più facile da leggere dato che non ci sono sezioni critiche o protocolli di entrata o uscita.
+La sincronizzazione su condizione va implementata esplicitamente perché programmi diversi richiedono differenti condizioni di sincronizzazione. Per far ciò, vengono utilizzate la \textbf{variabili condition}.
+Una procedura del monitor si dice \textit{attiva} se qualche processo sta eseguendo uno statement in quella procedura. Al più una procedura può essere attiva in un istante: non sono ammesse due chiamate alla stessa procedura o a procedure diverse allo stesso tempo. Questo perché, come già detto, la mutua esclusione è implicita e l'utente non se ne deve preoccupare.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\subsection{Condition Variables}
+Una condition variable è usata per ritardare un processo che non può continuare finché lo stato del monitor non soddisfa qualche condizione booleana. Viene anche usata per risvegliare un processo ritardato quando la condizione diventa vera.
+Le condition variables vengono dichiarate, e quindi usate, solo dentro il monitor.
+Dichiarate con: $ cond cv; $ \\
+Una V.C. è una \textbf{coda} contenente i processi sospesi, inizialmente vuota. Ciò significa che i processi non verranno svegliati casualmente, come nei semafori, ma in modo FIFO. Il valore di \textit{cv} non è direttamente visibili al programmatore, ma è accessibile indirettamente tramite speciali operazioni.
+\begin{itemize}
+\item \textbf{empty(cv)} usata da un processo per verificare se la coda è vuota(risponde true) o piena(false).
+\item \textbf{wait(cv)} causa il blocco del processo in esecuzione che viene messo in fondo alla coda di cv. La wait causa, inoltre, il rilascio dell'accesso esclusivo al monitor, consentendo l'accesso a un altro processo.
+\item i processi bloccati dalla \textit{wait} vengono risvegliati dalla \textbf{signal(cv)}. Se la coda è vuota non fa niente. Se è piena, \textit{signal} risveglia il processo in prima posizione nella coda.
+differenza con V del semaforo, la V rimane traccia, perché incrementa una variabile.
+\end{itemize}
+La \textit{wait} e la \textit{signal} applicano una disciplina di segnalazione di tipo FIFO, il primo a essere risvegliato è quello sospeso per primo. I processi sono ritardati nell'ordine in cui chiamano \textit{wait} e sono svegliati nell'ordine in cui viene chiamata la \textit{signal}.
 
 
 
