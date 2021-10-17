@@ -970,6 +970,34 @@ differenza con V del semaforo, la V rimane traccia, perché incrementa una varia
 \end{itemize}
 La \textit{wait} e la \textit{signal} applicano una disciplina di segnalazione di tipo FIFO, il primo a essere risvegliato è quello sospeso per primo. I processi sono ritardati nell'ordine in cui chiamano \textit{wait} e sono svegliati nell'ordine in cui viene chiamata la \textit{signal}.
 
+\subsection{Signaling Disciplines}
+Quando un processo esegue la \textit{signal}, sta girando all'interno di un monitor, e quindi ha il controllo del \textit{lock} implicitamente associato al monitor. Questo porta ad un \textbf{dilemma}. Se la \textit{signal} risveglia un altro processo, ci sono ora due processi in esecuzione: quello che ha eseguito la \textit{signal} e quello che è stato appena svegliato. Al massimo un processo può essere eseguito (anche su un multiprocessore), perché al massimo uno può avere accesso esclusivo al monitor. Quindi, ci sono due possibilità:
+\begin{itemize}
+\item Signal and Continue: Il segnalatore continua l'esecuzione e il processo segnalato viene eseguito in un momento successivo.
+\item Signal and wait: il segnalatore aspetta(non viene sospeso) fino ad un certo momento successivo e il processo segnalato viene eseguito subito.
+\end{itemize}
+
+Signal and Continue (SC) è \textbf{nonpreemptive}: il processo segnalatore mantiene il controllo esclusivo del monitor e il processo risvegliato viene eseguito in un momento successivo in cui può avere accesso esclusivo al monitor. In sostanza, un segnale è semplicemente un (hint) suggerimento che il processo risvegliato potrebbe continuare, quindi va in fondo alla \textit{entry queue}, la coda dei processi in attesa di entrare nel monitor, in attesa del lock.
+
+D'altra parte, Signal and Wait (SW) è preemptive: il processo segnalatore si mette in attesa e passa il controllo del blocco del monitor al processo risvegliato con la signal, e quindi il processo risvegliato dà la precedenza al segnalatore. In questo caso, il segnalatore torna nella coda dei processi in attesa del blocco del monitor.\\ (una variante è mettere il segnalatore all'inizio della coda dei processi in attesa del blocco del monitor; questo è chiamato Signal and Urgent Wait).\\ \\ \\
+
+\paragraph{Monitor per implementare semaforo}
+Lo scopo è didattico perché non ha senso implementare un semaforo con un monitor, il quale è un meccanismo di livello più alto rispetto a un semaforo.\\ \\
+\includegraphics[scale=0.51]{img/monsem.png} 
+\textit{s} è la variabile intera che rappresenta il semaforo. La variabile \textit{pos} è una variabile condition dato che si sta lavorando con un monitor e serve per stoppare i processi in attesa di una variabile semaforica.
+Vengono poi implementate la P e la V dei semafori con procedure dei monitor.
+P e V devono lavorare in mutex, ma all'interno del monitor è implicita, quindi no problem.
+La P controlla la variabile \textit{s}: se essa è zero, allora il processo che sta eseguendo la P va stoppato con la \textit{wait}. Quando il processo verrà eseguito, la \textit{s} verrà tipicamente decrementata.\\
+La V inizia tipicamente con l'incremento della variabile semaforica e se c'è un processo lo attiva con la \textit{signal}.\\
+nel caso della S\& W quando segnalo 
+nel caso della S
+
+
+
+
+
+
+
 
 
 

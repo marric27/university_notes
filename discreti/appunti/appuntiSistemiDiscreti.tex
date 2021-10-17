@@ -202,6 +202,7 @@ questo è detto modello autoregressivo esogeno (ARX).
 L'equazione alle differenze è di ordine \textit{n} (occorre tener memoria degli \textit{n} valori precedenti della \textit{y per generare il valore corrente}) ed il numero dei parametri del modello è pari a p=n+m+1.
 
 \subsection{Algoritmo LMS: Least Mean Square}
+\marginpar{videolezione 2021-10-11}
 Algoritmo per risolvere problemi di regressione lineare.
 Come sempre, il modello che andiamo ad individuare dipende dai dati a nostra disposizione. La bontà del modello, parametri vicini ai valori veri, dipende da quanto i dati a disposizione siano rappresentativi del comportamento del sistema, fenomeno.
 Se le osservazioni fatte sono legate soltanto a un piccolo aspetto, una specifica fase del processo, ma non tutto il range del comportamento del processo stesso. Quindi $ \theta $ è funzione di $\phi$ e $y$, e $\phi$ e $y$ hanno a che fare con le osservazioni e con i dati del sistema.\\
@@ -219,7 +220,7 @@ Meglio sarebbe avere un algoritmo che dopo una nuova misura il nuovo vettore dei
 Algoritmo che esprime la nuova misura in funzione del valore del parametro precedente si chiama \textbf{RLS}, minimi quadrati ricorsivi.
 Molto comodo perché può funzionare sempre, ad ogni osservazione, anche in realtime.
 
-Least mean square, minimo errore quadratico medio
+\textbf{Least mean square, minimo errore quadratico medio}
 Abbiamo ipotizzato il modello di regressione lineare:
 \begin{equation}
 h_\theta(x)=\varphi^T\theta=\theta_0+\sum_{j=1}^{p-1}x_j\theta_j
@@ -235,7 +236,42 @@ cioè l'osservazione meno la stima ottenuta utilizzando i parametri e il vettore
 Come si risolve il problema ai minimi quadrati formulato in questa maniera?
 Col gradiente:\\
 $ \dfrac{\partial}{\partial \theta_j}J(\theta)=-\sum_{i=1}^N((y^{(i)}-h_\theta (x^{(i)}))x_j^{(i)} $
-qui si ragioni in termini di scalari, quindi con la componente j-esima del gradiente
+qui si ragiona in termini di scalari, quindi con la componente j-esima del gradiente
+L'algoritmo che si può implementare è l'algoritmo, non ai minimi quadrati a lotti che ci dà in un colpo solo la soluzione del problema di ottimizzazione, ma uno basato sulla discesa del gradiente. Simile alla ricerca del minimo di una funzione(derivata = 0) fatto in maniera iterativa, applicato al caso a più variabili.
+In maniera analitica il minimo si calcola in un colpo solo, direttamente risolvendo un'equazione, imponendo la derivata=0.
+Se volessimo farlo fare a un calcolatore l'idea è quella di muoversi per tentativi, in maniera iterativa, muovendosi nella direzione della derivata che fa decrescere la funzione. Inizia da un valore a caso, valuta il valore della funzione e valuta il valore della derivata che la funzione assume in quel punto. Poi da quel punto si muove nella direzione opposta al valore della derivata perché la derivata dice la tangente a quel punto, se la derivata è positiva vuol dire che muovendosi nella direzione della derivata la funzione cresce. Dato che cerchiamo il minimo, ci si muove nella direzione opposta al valore della derivata e continuo a fare l'update dei tentativi finché lo scostamento ottenuto è piccolo. Piccolo significa che la derivata è piccola perché si trova nell'intorno di un punto di minimo. Questa è la tecnica della discesa del gradiente, cerca il punto di minimo nel caso multivariabile (caso scalare uso la derivata) e consiste nel cercare in maniera iterativa il punto di minimo andando a valutare sempre nuovi valori che si muovono in direzione opposta al gradiente. Opposta perché vado nella direzione in cui la derivata diventa sempre più negativa, decresce la funzione.
+Nel caso multivariabile guardo il gradiente e ciò che va aggiornato è $ \theta $ ad ogni iterazione. Il nuovo $ \theta $ sarà dato dal $ \theta $ corrente più lo scostamento.
+
+\includegraphics[scale=0.41]{lms.png} 
+
+differenze rispetto ai minimi quadrati a lotti:
+non lavora con matrici, solo funzioni scalari
+lavora maniera iterativa
+non conosco il tempo di risoluzione del problema a priori
+in ogni caso si converge
+scelta adeguata del parametro alfa\\ \\ \\
+
+Quando i dati a disposizione sono tanti $ N\rightarrow\infty $ si può decidere di aggiornare tutti i parametri usando un dato per volta:\\
+
+\includegraphics[scale=0.41]{lms2.png} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
