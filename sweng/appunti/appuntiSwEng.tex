@@ -747,27 +747,226 @@ nel file build.gradle: apply plugin: 'java'
 
 \marginpar{videolezione 2021-10-15 pratica su gradle+info gruppi e progetto}
 
+\chapter{Software Licensing}
+\marginpar{videolezione 2021-10-18}
+\section{Introduzione}
+Verranno introdotti concetti relativi alla proprietà intellettuale del SW e analizzate le licenze software. Poi i pattern di integrazione, ovvero, una volta che si ha una licenza, come si può integrare software che utilizza licenze diverse. Infine licensing exception e bug.
+
+\section{Reusing Open Source Software}
+Da dove nasce la necessità di creare delle licenze open source? Questa necessità nasce dal fatto che, con una disponibilità sempre maggiore di codici open source, e la possibilità di poterlo riutilizzare, senza reinventare la ruota ogni volta, si volesse governare il modo in cui questo software viene utilizzato. Da un lato, per dare la possibilità ad altri di poter sfruttare il software, anche per scopi commerciali; in altri casi, per assicurarsi che quel software rimanesse opensource o prevenire il fatto che esso diventasse una componente di un progetto closed source. A seconda delle scelte sono state definite diverse tipologie di licenze.
+
+Tutto nasce dal concetto di \textbf{proprietà intellettuale} applicata al software. La proprietà intellettuale è l'applicazione a fini commerciali di un'opera dell'immaginazione che ha come scopo quello artistico (musica film opere letterarie...) o risolvere un problema tecnico.
+Negli anni '80 il concetto di proprietà intellettuale viene applicato anche al software.
+Dopodiché però ci si è resi conto che, applicare le stesse regole dei prodotti artistici al software non andava così bene perché c'è bisogno di regole un po' più precise che vadano a disciplinare il modo con cui dei componenti software rilasciati secondo alcune licenze possano essere poi integrati da un'altra componente.
+
+Chi inizia a definire concetti ben precisi per quanto concerne le licenze per SW opensource è la Free Software Foundation, che elenca quattro gradi di libertà che il SW deve avere per essere considerato opensource:
+\begin{itemize}
+\item Freedom 0: libertà di eseguire il programma, per ogni scopo.
+\item Freedom 1: libertà relativa a studiare il programma come funziona e modificarlo al proprio scopo. L'accesso al codice sorgente è precondizione.
+\item Freedom 2: libertà di ridistribuire copie del SW; qui vanno ad incidere tutti i livelli di licenze.
+\item Freedom 3: libertà di distribuire copie del SW modificato agli altri.
+\end{itemize}
+
+\subsection{Open Source definition}
+Qui definite altre caratteristiche e vincoli dell'open source:
+\begin{itemize}
+\item Ridistribuzione libera.
+\item il programma deve includere il codice sorgente.
+\item deve permettere modifiche e lavori derivati.
+\item integrità del codice sorgente dell'autore, deve essere evidente chi è l'autore del codice da qualche parte all'interno di esso(e.g. nome commentato a inizio file).
+\item Distribuzione della licenza, il codice deve avere una licenza altriment non è considerato open source.
+\item la licenza non si applica a prodotti specifici
+\item una licenza non deve restringere né rispetta a determinati SW né a determinati HW, cioè una licenza non può dire che un SW si può eseguire solo su un SO o solo su determinato HW.
+\item la licenza deve essere technology-neutral.
+\end{itemize}
+
+Freeware non significa necessariamente open source e.g. quando vengono distribuiti solo i binaries.
+Open source non significa che ci si può fare soldi, ma ci si può guadagnare tramite consulenza e assistenza.
+
+\section{Copyright}
+Non nasce, ovviamente col SW, ma nel mondo della proprietà intellettuale. Il copyright dà all'owner di un'opera intellettuale i diritti di proibire agli altri la possibilità di copiare, creare un derivative work o inserire il lavoro in una compilation o in una collection work.
+L'owner tipicamente è l'autore del SW, quindi chiunque fixa bug o aggiunge feature o chiunque è impiegato nello sviluppo; le cose cambiano se l'autore lavora per conto di un'azienda, in tal caso essa è l'owner. 
+Il concetto di copyright serve per proteggere l'espressione e non l'idea. Nel caso del SW serve per porre dei vincoli sull'implementazione. L'idea si protegge col brevetto.
+Il copyright inoltre ha un termine limitato tipicamente di 70 anni, rinnovabile.
+Cosa succede quando uno sviluppatore modifica un pezzo di codice?
+Va valutata l'entità della modifica, se essa è sostanziale allora l'autore viene aggiunto come copyright owner.
+
+\section{Joint works}
+Un'opera è joint(congiunta) se gli autori hanno collaborato con la consapevolezza e l'intenzione che essa sarebbe stata unita(merged) con i contributi degli altri.
+Ogni autore può licensiare il lavoro, ma deve compensare i coautori in caso di guadagno.
+ 
+\section{Derivative Work}
+Concetto chiave nello sviluppo software.
+Un derivative work è un lavoro basato su un lavoro preesistente (cover musicale) o altri casi in cui esso viene trasformato o adattato.
+In ambito SW il concetto di derivative work il concetto è più subdolo, in quanto, dato un pezzo di codice, esso può essere esteso in tanti modi diversi; quindi capire che un software è un derivative work è difficile e soggetto a diverse interpretazioni.
+
+\section{Collective work / Compilation}
+\paragraph{Collective work} Lavoro creato mettendo insieme più lavori indipendenti. Ogni lavoro ha il suo autore, i suoi copyright e così anche il lavoro completo. 
+
+\paragraph{Compilation} Collezione e assemblaggio di materiale preesistente o di dati selezionati, coordinati e adattati in modo tale che il lavoro risultante sia un'opera originale d'autore.
+e.g. compilation musicale, libri scolastici, linux distros
+
+\section{Chain of Title}
+L'ownership può essere trasferita via contratto, tramite vendita.
+Nel caso di \textbf{derivative works} l'autore originale viene aggiunto alla chain of title del lavoro. e.g. sviluppo prodotto SW che utilizza librerie bsd o apache, posso rilasciare il prodotto come closed source, addirittura venderlo, ma a patto che venga riportato anche il nome dei contributors delle librerie.
+Nel caso di \textbf{compilation} ciascun elemento mantiene la sua ownership, mentre la compilation acquisisce una nuova ownership.
+
+\section{Software License}
+Una licenza software è uno statement che regola la combinazione(derivative work), riuso e \textbf{ridistribuzione} del SW.
+Viene stabilita dall'owner del SW e scritta dagli sviluppatori, tenendo conto di tutti i vincoli posti dai componenti che vengono assemblati.
+(il problema di definire la licenza sorge quando voglio distribuirlo. Se sviluppo un SW da usare a casa, senza distribuirlo, non è necessario licenziare il SW)
+
+\section{End-user License Agreement (EULAs)}
+Tipo di licenza che si applica unicamente agli utenti, coloro che pagano e che utilizzano il SW senza creare derivative work.
+Questa licenza viene accettata tipicamente quando si installa il SW (text box che non leggiamo mai che vincola rispetto al modo con cui si può utilizzare quel SW, dice che non si può modificare, ridistribuire o fare reverse engigneering), oppure quando si scarica dalla rete, o quando si apriva banalmente la confezione del CD/DVD.
+Caso particolare sono le WebAPI (e.g. api di github o google), sul cui sito di riferimento si troverà la EULA che spiega quelli che sono i vincoli di utilizzo.
+Anche i sistemi web based hanno la EULA, come Youtube, la cui licenza proibisce, ad esempio, il download dei video.
+
+\section{Open Source Licenses}
+Licenze create per semplificare il riuso del SW open source. Si dividono in due grandi famiglie: BSD, GPL. Anche aziende come Microsoft o IBM rilasciano SW open source e quindi hanno definito delle proprie licenze: Microsoft Public License, Microsoft Reciprocal License, la prima si avvicina alla famiglia BSD, la seconda alle GPL.
+
+Le licenze si dividono in due tipi principali: 
+\begin{itemize}
+\item \textbf{Restrictive}: concetto spesso associato ai termini \textit{copyleft} o \textit{reciprocal}. Il concetto chiave di queste licenze è che se viene creata una derivative da SW rilasciato con licenza restrittiva, anche la derivative dovrà avere licenze simili o uguali rispetto al SW originale.
+\item \textbf{Permissive}: come dice il termine sono permissive, nel senso che il SW derivato può essere ridistribuito sotto forma di open source, ma anche sotto forma di binario, andando a creare così SW closed source a partire dall'open source. Ovviamente va fornito un disclaimer dichiarante l'utilizzo di codice open source e includendo i nomi degli owner.
+\end{itemize}
+
+\paragraph{Esempi di licenze}
+Esempi di licenze restrittive: LGPL, GPL, Linux, Arduino, Wine.
+Esempi di licenze permissive: Apache, MIT, BSD, Eclipse.
+
+\subsection{Com'è fatta una licenza}
+Essenzialmente una licenza è un testo e sul sito \url{https://opensource.org/licenses/} si possono trovare tutti i testi delle licenze più popolari. Di fatto anche GitHub, al momento della creazione del progetto, permette di specificare una licenza e quindi generarla.
+
+\subsection{Licenze GPL}
+Famiglia di licenze (v1, v2 e v3) che impone dei requisiti più forti. Stabilisce che se all'interno del SW si include codice rilasciato sotto licenza GPL, questo deve essere rilasciato sotto la stessa versione di licenza. Includere codice significa includere qualsiasi frammento di codice o un singolo file che proviene da altro SW GPL.
+Allo stesso modo, se viene semplicemente linkata una libreria sotto licenza GPL, il nuovo sistema SW dovrà essere licenziato sotto la stessa licenza GPL. 
+
+Ancora, se viene rilasciato un sistema SW sotto qualsiasi versione di licenza GPL, il codice non può essere incluso in prodotti rilasciati sotto altre licenze come BSD o Eclipse Public License.
+Infine, un codice non può essere incluso in progetti sotto versioni diverse di licenze GPL. (e.g.version 3 code cannot be combined with version 2)
+
+\subsection{GPL 2 vs GPL 1}
+La GPL 2, rispetto alla 1, introduce la \textit{Liberty or Death clause}, la quale indica che se qualcuno pone delle restrizioni che in qualche modo vanno a prevenire la redistribuzione o i diversi gradi di libertà del SW, questo no può essere assolutamente redistribuito.
+In sostanza, se non è possibile distribuire il codice soddisfacente tutte le obbligazioni della licenza GPL, allora neanche il sistema SW può essere ridistribuito.
+
+\subsection{GPL 3}
+Introduce cambiamenti importanti quali la relazione tra licenze e brevetti, la compatibilità con altre licenze e la protezione da restrizioni hardware (tivoization).
+Per quanto riguarda i \textit{patent}, brevetti, la GPL 3 si estende anche ai patent contenuti nel progetto; quindi se c'è qualcosa brevettato all'interno del programma, qualsiasi versione del brevetto deve sottostare a vincoli GPL 3.
+Riguardo la compatibilità con altre licenze, GPL 3 facilita la combinazione di codice GPL con codice rilasciato sotto altre licenze, in particolare Apache 2.0. Codice sotto licenza Apache 2.0 può essere redistribuito sotto GPL 3. Il contrario, codice GPL 3 sotto Apache 2.0, non è possibile.
+Ultimo aspetto, tivoization, riguarda il fatto che un sistema hardware potrebbe implementare un check che previene l'esecuzione di una versione modificata del software. e.g. chiavi hardware che vanno inserite per poter utilizzare SW e per prevenire l'esistenza di SW pirata. Adesso si usano server di autenticazione.
+Questo meccanismo è proibito esplicitamente dalle GPL 3.\\
+from wikipedia: uno degli obiettivi della proposta GPL Versione 3 è di prevenire la "Tivoization". Secondo Eben Moglen, "la licenza dovrebbe proibire i mezzi tecnici che permettono di aggirarne le regole, con la stessa chiarezza con cui proibisce i mezzi legali per aggirarle".
+
+\subsection{BSD e varianti}
+Sono licenze \textbf{permissive}, ossia permettono di redistribuire SW sotto qualsiasi altra licenza oppure come parte di un prodotto commerciale. Non compatibili con GPL.
+Esempi di queste licenze sono la BSD a 3 clausole, Apache, MIT.
+
+\subsubsection{3-cluase BSD}
+\begin{quote}
+Copyright (c) YEAR, OWNER\\
+All rights reserved.
+\end{quote}
+
+La ridistribuzione e l'uso in forma sorgente e binaria, con o senza modifica, sono permessi a condizione che le seguenti condizioni siano soddisfatte:
+\begin{enumerate}
+\item Le ridistribuzioni del codice sorgente devono mantenere l'avviso di copyright di sopra, questo elenco di condizioni e il seguente disclaimer.
+\item Le ridistribuzioni in forma binaria devono riprodurre l'avviso di copyright sopra, questo elenco di condizioni e il seguente disclaimer nella documentazione e/o altro materiale fornito con la distribuzione.
+\item Né il nome del detentore del copyright né i nomi dei suoi collaboratori possono essere usati per (sponsor) sostenere o promuovere prodotti derivati da questo software senza uno speciale permesso scritto.
+\end{enumerate}
+
+\begin{quote}
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+\end{quote}
+
+\subsection{GNU Lesser Public License(LGPL)}
+Oltre alle due famiglie di licenze, permissiva e restrittiva, esistono delle soluzioni intermedie. Una di queste è la GNU LGPL
+Con la licenza GPL non solo non si possono prendere pezzi di codice o file e includerli nel prodotto da redistribuire, ma non si può neanche linkare una libreria GPL. Proprio per ovviare a questa forte limitazione, alcuni owner di SW hanno deciso di rilasciare il proprio SW sotto licenze LGPL, cioè si può creare un derivative work a patto che se si vuole includere una libreria LGPL l'unico modo di integrazione da usare è il linking, quindi semplicemente l'import della libreria senza possibilità modificarla. Questa licenza si applica molto bene alle librerie.
+
+\subsection{Mozilla Public License (MPL)}
+Ha caratteristiche relativamente simili alla precedente e costituisce un compromesso tra licenze permissive e restrittive. Stabilisce la possibilità di creare un derivative work e licenziarlo anche sotto licenza proprietaria per uso commerciale.
+Però, tutti i file che erano sotto licenza MPL devono rimanere invariati. Se questi file vengono invece modificati, vige l'obbligo di pubblicare la nuova versione come open source, anche se il prodotto è closed source.
+
+\subsection{Affero GPL (AGPL)}
+GPL stabilisce che una libreria non può essere redistribuita come parte di un prodotto che non sia GPL. Con l'avvento di nuove tecnologie di integrazione, come le architetture a servizi, si è trovato il modo di aggirare GPL; semplicemente, se ho un software GPL, senza distribuirlo, lo metto su un server e lo espongo come servizio. Se questo SW ha un client lo realizzo con codice non GPL, quindi posso redistribuirlo. In questo modo non si viola la licenza GPL poiché non c'è stata ridistribuzione di codice GPL.
+Quindi in sintesi, se un SW non viene distribuito, ma rilasciato solo sulla rete, le norme GPL non vengono applicate.
+Per evitare tutto ciò viene introdotta la licenza Affero GPL che aggiunge ulteriori vincoli alla GPL; tale licenza richiede che il codice sorgente, se modificato, sia reso disponibile a chiunque utilizzi l'opera sulla rete.
+
+\subsection{Altre Licenze :)}
+\subsubsection{DWTFYWPL}
+\begin{verbatim}
+do What The Fuck you want to Public License
+Version 1.0, March 2000
+Copyright (C) 2000 Banlu Kemiyatorn (]d).
+136 Nives 7 Jangwattana 14 Laksi Bangkok
+Everyone is permitted to copy and distribute verbatim
+copies of this license document, but changing it is not
+allowed.
+Ok, the purpose of this license is simple and you just
+DO WHAT THE FUCK YOU WANT TO.
+\end{verbatim}
+
+\subsubsection{Beer Ware}
+\includegraphics[scale=0.31]{beer.png} \\
+\begin{verbatim}
+/*
+* ----------------------------------------------------------------------------
+* "THE BEER-WARE LICENSE" (Revision 42):
+* <phk@FreeBSD.ORG> wrote this le. As long as you retain this notice you
+* can do whatever you want with this stuff. If we meet some day, and you think
+* this stuff is worth it, you can buy me a beer in return. Poul-Henning Kamp
+* ----------------------------------------------------------------------------
+*/
+\end{verbatim}
+
+\subsection{Un po' di storia}
+GPL nasce dalla GNU con Richard Stallman che la sviluppa come licenza del suo editor di testo EMACS.
 
 
+\includegraphics[scale=0.31]{lic.png} \\
 
+In generale la stragrande maggioranza di software è rilasciata sotto licenze permissive, perché questo permette lo sfruttamento di software anche a scopo commerciale.
 
+A volte potrebbe essere conveniente migrare verso licenze permissive, ad esempio Mono, pacchetto che rendeva compatibile .Net in ambiente Linux, dato che prima era compatibile solo con Windows.
+Mono, inizialmente, era stato rilasciato con licenza GPL v2. Successivamente, dopo l'interesse di HP a sviluppare con Mono, è stata cambiata in una licenza più permissiva. Tale scelta ha consentito alla crescita della comunità dei contributors.
 
+\subsection{L'importanza delle licenze}
+Licenziare il SW ha anche delle implicazioni economiche ad esempio la disputa tra Oracle e SAP, in cui SAP utilizzava codice non adibito a scopi commerciali e ha dovuto un risarcimento in termini di milioni di dollari.
+La scelta di una licenza può influire anche sulla vita del SW. e.g. l'autore di IP-Filter, firewall di OpenBSD, decise di cambiare la licenza al suo prodotto in una incompatibile con OpenBSD. A questo punto IP-Filter venne rimpiazzato.
 
+\subsection{Ragioni per la scelta della licenza}
+Ma in che modo viene scelta una licenza? Per quale ragione? 
+Statisticamente emergono questi dati:\\
+\includegraphics[scale=0.41]{lic2.png} \\
+Al primo posto c'è l'influenza della comunità in quanto costituisce un punto di riferimento per lo sviluppatore che tenderà a mantenersi entro un certo ecosistema.
+Andando più nel "piccolo", va tenuto conto della misura in cui si potrà riutilizzare il SW a fini commerciali.
+Dependency Constraint: va tenuto conto delle librerie utilizzate in quanto esse pongono dei limiti.
+Ci sono anche fattori di scelta che esulano dall'aspetto tecnico o economico.
+Si sceglie anche per aspetti morali, ad esempio si vuole un SW che sia libero per sempre.
 
+\subsection{Is software adequately licensed?}
+Attualmente c'è poca conoscenza delle licenze ed il fatto che il SW debba essere licenziato è fortemente sottovalutato.
+Un SW rilasciato senza licenza non è open source. e.g. se carico un progetto su GitHub senza licenza, non è detto che qualcun altro lo possa utilizzare, in quanto esso è soggetto al mio copyright.
+Nel 2013 su GitHub il 77\% dei porgetti non aveva licenza. Questo è dovuto, a volte, alle difficoltà degli sviluppatori che non sanno bene in quale direzione andare.
+Per ovviare a questi problemi esistono delle applicazioni che aiutano nella scelta della licenza: questi sistemi pongono una serie di domande stile questionario e in base alle risposte suggeriscono quelle che possono essere le possibili licenze. \\
+app utile: Licence differentiator.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+\subsection{Come viene licenziato il software?}
+Tipicamente, il testo della licenza\textbf{Licensing statement}, viene messo o in un file LICENSE a livello di intero progetto(nella root) o in testa a un file andando a licenziare solo quello.
+Il testo conterrà la licenza open source che si sta utilizzando (o un link ad essa), il copyright, l'anno e le info del proprietario.
 
 
 
