@@ -1002,7 +1002,7 @@ La modifica fa sì che chi risveglia non esponga la condizione, ovvero non incre
 Ciò garantisce la politica FIFO anche per la SC.
 Questa è la \textbf{tecnica del passaggio della condizione}, perché in sostanza il segnalatore passa implicitamente la condizione che \textit{s} sia positivo al processo che risveglia. Non rendendo la condizione visibile, nessun processo diverso da quello risvegliato dalla signal può vedere che la condizione è vera ed essere eseguito. La tecnica, inoltre, può essere utilizzata ogniqualvolta la wait e la signal contengono azioni duali, come in questo caso l'incremento e il decremento del semaforo.\\ \\
 \includegraphics[scale=0.41]{img/vs.png} \\
-D'ora in poi verrà utilizzata sempre la S\&C.
+D'ora in poi verrà utilizzata sempre la S\&C, più facile da implementare.
 
 \subsection{Operazioni addizionali sulle variabili condition}
 Oltre alle operazioni già viste sulle variabili condition (empty, wait, signal), ce ne sono altre tre: priority wait, minrank, signal\_all.
@@ -1017,10 +1017,34 @@ Non porta danno, in quanto se non ci sono processi in coda non fa nulla.
 
 \section{Tecniche di Sincronizzazione}
 \marginpar{videolezione 2021-10-19}
+This section develops monitor-based solutions to five problems: (1) bounded buffers, (2) readers/writers, (3) shortest-job-next scheduling, (4) interval timers, (5) and the sleeping barber.
 
 \subsection{Bounded buffers}
+Viene ripreso il problema in cui un processo produttore e uno consumatore comunicano attraverso un buffer condiviso di \textbf{n} slot. I processi accedono al buffer attraverso operazioni di deposito e prelievo di messaggi. La sincronizzazione è richiesta per non depositare quando il buffer è pieno e per non prelevare quando è vuoto.
+Il buffer viene dichiarato all'interno del monitor, cosicché la mutex sia implicita, la sincronizzazione è implementata con le variabili condition.
+Le procedure del monitor \textit{deposit} e \textit{fetch}, accessibili una per volta, controllano rispettivamente che la coda del buffer sia piena o vuota. I controlli si fanno col while per ritestare la condizione, visto che potrebbe esserci già un processo nella coda di attesa del monitor. Il processo che deposita se trova il buf pieno attende una \textit{signal} sulla var cond \textit{not\_full} segnalata ogni volta che $ count<n $. Se lo trova vuoto, deposita e segnala la var cond \textit{not\_empty}. Il processo che preleva verifica che la lista non sia vuota, quindi preleva e libera una posizione del buffer e segnala la var cond \textit{not\_full}. Se il buffer è vuoto verrà fatta una wait sulla var cond \textit{not\_empty}. Se non ci sono processi in attesa non c'è problema perché la \textit{signal} non avrà effetto (si può abbondare in \textit{signal}). In questo caso, con i wait che recheckano le condizioni in loop, le signal possono essere eseguite at any time e sono degli hint, suggerimenti ai processi ritardati di svegliarsi. Non è molto efficiente ma funziona.
+Le procedure sono simmetriche.
 
 \subsection{Lettori e scrittori}
+Problema in cui lettori e scrittori condividono un'area di memoria. Gli scrittori vi scrivono in mutua esclusione, i lettori vi leggono concorrentemente. Utilizzando i monitor, la memoria condivisa non può essere incapsulata nel monitor perché non sarebbe garantito l'accesso concorrente dei lettori.
+Il monitor sarà usato in questo caso per gestire l'\textbf{arbitraggio}, ovvero per decidere chi può accedere alla memoria shared, che ora non si trova più nel monitor, ma è globale rispetto ai processi lettori e scrittori.
+I processi quindi utilizzeranno il monitor per richiedere e rilasciare l'accesso al DB.
+Per implementare questa logica troviamo quattro procedure: ingresso e uscita dalla lettura, ingresso e uscita dalla scrittura.
+Le variabili \textit{nr} e \textit{nw} contano gli scrittori e i lettori in attività e devono soddisfare l'invariante del monitor: \includegraphics[scale=0.41]{img/baton2.png} \\
+Servono due var cond, \textit{oktoread} e \textit{oktoread}, per regolare la sincronizzazione dei processi. \\ \\
+\includegraphics[scale=0.41]{img/readwritemon.png} \\
+Nella request\_read(), se è verificata la condizione
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Shortest-Job-Next: priority wait}
 
