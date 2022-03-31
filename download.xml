@@ -1,0 +1,36 @@
+<application xmlns="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema"><grammars><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" version="1.0">
+    <xs:element name="hotel" type="hotel"/>
+    <xs:element name="order" type="order"/>
+    <xs:element name="rate" type="rate"/>
+    <xs:element name="results" type="results"/>
+    <xs:complexType name="results">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="results" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="order">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="confirmationDate" type="xs:dateTime"/>
+            <xs:element name="creditcard" type="xs:int"/>
+            <xs:element minOccurs="0" ref="rate"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="rate">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="checkin" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="checkout" type="xs:dateTime"/>
+            <xs:element name="hotelId" type="xs:int"/>
+            <xs:element name="price" type="xs:double"/>
+            <xs:element minOccurs="0" name="roomType" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="hotel">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="city" type="xs:string"/>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="rates" nillable="true" type="rate"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+</grammars><resources base="http://localhost:8080/Ex5.2/hotelagency/"><resource path="/"><resource path="bookings"><method name="GET"><request><param name="cc" style="query" type="xs:int"/></request><response><representation mediaType="application/json"/></response></method><method name="POST"><request><representation mediaType="application/json"/><param name="cc" style="query" type="xs:int"/></request><response><representation mediaType="application/json"/></response></method></resource><resource path="bookings/{id}"><param name="id" style="template" type="xs:int"/><method name="GET"><request></request><response><representation mediaType="application/json"/></response></method></resource><resource path="hotels"><method name="GET"><request><param name="checkin" style="query" type="xs:string"/><param name="checkout" style="query" type="xs:string"/><param name="city" style="query" type="xs:string"/></request><response><representation mediaType="application/json"/></response></method></resource><resource path="hotels/{id}"><param name="id" style="template" type="xs:int"/><method name="GET"><request></request><response><representation mediaType="application/json"/></response></method></resource></resource></resources></application>
